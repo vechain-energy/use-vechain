@@ -3,7 +3,7 @@ import { Button, Typography } from 'antd'
 import { useAccount } from '@vechain.energy/use-vechain'
 const { Text } = Typography
 
-export const Example = () => {
+export const Account = () => {
   const { account, error, isLoading, connect, disconnect } = useAccount()
 
   const Address = () => <Text type='secondary'>{account.slice(0, 4)}…{account.slice(-4)}</Text>
@@ -15,6 +15,6 @@ export const Example = () => {
       {!account && <Button block onClick={connect} loading={isLoading} shape='round'>sign in</Button>}
     </>
   )
-Ac}
+}
 
-export default { title: 'Hooks/useAccount' }
+export default { title: 'Hooks/useAccount'}

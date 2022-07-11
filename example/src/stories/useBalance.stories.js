@@ -2,7 +2,7 @@ import React from 'react'
 import { Descriptions } from 'antd'
 import { useBalance } from '@vechain.energy/use-vechain'
 
-export const Example = () => {
+export const Balance = () => {
   const address = '0x0000000000000000000000000000000000000000'
   const { vet, vtho } = useBalance(address)
 
