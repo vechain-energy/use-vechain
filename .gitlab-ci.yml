@@ -5,10 +5,11 @@ stages:
   - build
   - deploy
 
-build:
+build storybook:
   stage: build
   image: node:16
   script:
+    - yarn link
     - cd example
     - yarn install
     - yarn run build-storybook
