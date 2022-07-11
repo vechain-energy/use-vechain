@@ -21,8 +21,8 @@ build storybook:
 
 pages:
   stage: deploy
+  image: node:16
   script:
-    - mv public _public
     - mv example/storybook-static public
   environment:
     name: "Gitlab Pages"
