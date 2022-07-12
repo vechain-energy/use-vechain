@@ -1,11 +1,17 @@
-import React from 'react'
+import { Meta, Story, Canvas } from '@storybook/addon-docs';
 import { Descriptions } from 'antd'
 import { useBalance } from '@vechain.energy/use-vechain'
+
+# useBalance
+
+<Meta title="Hooks/useBalance" />
+
+Returns up-to-date balance of VET and VTHOP for any given address. The balance updates with each block.
+
 
 export const Balance = () => {
   const address = '0x0000000000000000000000000000000000000000'
   const { vet, vtho } = useBalance(address)
-
   return (
     <Descriptions bordered column={1}>
       <Descriptions.Item label='Address'>{address}</Descriptions.Item>
@@ -15,4 +21,8 @@ export const Balance = () => {
   )
 }
 
-export default { title: 'Hooks/useBalance' }
+<Canvas withSource="open">
+  <Story name="balance">
+    {Balance.bind()}
+  </Story>
+</Canvas>

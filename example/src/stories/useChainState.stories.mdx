@@ -1,0 +1,27 @@
+import { Meta, Story, Canvas } from '@storybook/addon-docs';
+import { useChainState } from '@vechain.energy/use-vechain'
+
+
+
+# useChainState
+
+<Meta title="Hooks/useChainState" />
+
+Provides access to the current blockchain and connection state.
+
+export const Head = () => {
+  const { head } = useChainState()
+  return <pre>{JSON.stringify(head, '', 2)}</pre>
+}
+
+
+## `head`
+
+Updated on each new block the current blockchain status is provided.
+
+
+<Canvas withSource="open">
+  <Story name="head">
+    {Head.bind()}
+  </Story>
+</Canvas>

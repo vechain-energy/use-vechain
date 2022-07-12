@@ -6,7 +6,7 @@
   "license": "MIT",
   "repository": "https://gitlab.com/vechain.energy/common/use-vechain.git",
   "bugs": "https://gitlab.com/vechain.energy/common/use-vechain/-/issues",
-  "homepage": "https://vechain.energy",
+  "homepage": "https://use-vechain.examples.vechain.energy",
   "main": "dist/index.js",
   "module": "dist/index.modern.js",
   "source": "src/index.js",

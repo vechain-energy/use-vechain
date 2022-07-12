@@ -20,7 +20,6 @@ addDecorator(TestNetProvider);
 
 addParameters({
   viewMode: 'docs',
-  docs: { previewSource: 'open' },
   previewTabs: {
     'storybook/docs/panel': null,
     canvas: { hidden: true }

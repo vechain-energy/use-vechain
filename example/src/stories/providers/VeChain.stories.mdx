@@ -1,0 +1,65 @@
+import { Meta } from '@storybook/addon-docs';
+import { VeChainProvider } from '@vechain.energy/use-vechain'
+
+# VeChainProvider
+
+<Meta title="Providers/VeChain" />
+
+## Networks
+
+The `VeChainProvider` provides a context for one `connex` instance connected to one network.
+
+Configuration to connex is passed using the `config` property:
+
+```jsx
+<VeChainProvider config={{ node: 'https://testnet.veblocks.net', network: 'test' }}>
+  <App />
+</VeChainProvider>
+```
+
+All hooks rely on the VeChainProvider to interact with VeChain, it is required.
+
+### Example
+
+Example for a `create-react-app` application and its `index.js`:
+
+```jsx
+import React from 'react';
+import ReactDOM from 'react-dom/client';
+import 'antd/dist/antd.css'
+import App from './App';
+import reportWebVitals from './reportWebVitals';
+import { VeChainProvider } from '@vechain.energy/use-vechain'
+
+const root = ReactDOM.createRoot(document.getElementById('root'));
+root.render(
+  <React.StrictMode>
+    <VeChainProvider config={{ node: 'https://mainnet.veblocks.net', network: 'main' }}>
+      <App />
+    </VeChainProvider>
+  </React.StrictMode>
+);
+
+// If you want to start measuring performance in your app, pass a function
+// to log results (for example: reportWebVitals(console.log))
+// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
+reportWebVitals();
+```
+
+## VeChainContext
+
+A context provides raw access to connex and some basic functionality that is used within the provided hooks.
+
+```jsx
+
+import { VeChainContext } from '../providers/VeChain'
+
+export function ExampleComponent () {
+  const { connex, account } = useContext(VeChainContext)
+}
+```
+
+Export | Description | Usage
+:----- | :---------- | :------
+`connex` | pure connex instance | raw interaction with connex
+`account` | currently signed in user address

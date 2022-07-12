@@ -1,0 +1,43 @@
+import { Button, Typography } from 'antd'
+import { useAccount } from '@vechain.energy/use-vechain'
+import { Meta, Story, Canvas } from '@storybook/addon-docs';
+
+# useAccount
+
+<Meta title="Hooks/useAccount" />
+
+Provides simplified functionality for identifying a user with Sync1 and Sync2.  
+Thee users address is persisted in `localStorage` to remember the user on a page reload.
+
+
+
+## Exports
+
+Export | Description
+:----- | :----------
+`account` | currently signed in user address
+`error`   | any catched error message
+`isLoading` | boolean, `true` during identification
+`connect` | initiates identification process
+`disconnect` | forgets the current user
+
+
+### Example
+
+export const Account = () => {
+  const { account, error, isLoading, connect, disconnect } = useAccount()
+  const Address = () => <Typography.Text type='secondary'>{account.slice(0, 4)}…{account.slice(-4)}</Typography.Text>
+  return (
+    <div>
+      {!!error && <div>Error: {error}</div>}
+      {account && <Button block onClick={disconnect} danger shape='round' icon={<Address />}>&nbsp;sign out</Button>}
+      {!account && <Button block onClick={connect} loading={isLoading} shape='round'>sign in</Button>}
+    </div>
+  )
+}
+
+<Canvas withSource="open">
+  <Story name="example">
+    {Account.bind()}
+  </Story>
+</Canvas>
