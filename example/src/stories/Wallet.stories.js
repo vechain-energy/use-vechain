@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { ethers } from '@vechain/ethers'
-import { Button, Typography, List, Avatar, Row, Col, Radio } from 'antd'
+import { Button, Typography, List, Avatar, Row, Col, Radio, Divider } from 'antd'
 import { VeChainProvider, useAccount, useTokens, useCall } from '@vechain.energy/use-vechain'
 const { Text } = Typography
 
@@ -11,22 +11,30 @@ const NETWORKS = {
   'test': { node: 'https://testnet.veblocks.net', network: 'test' }
 }
 
-export const Wallet = () => {
-  const { tokens } = useTokens()
+export const TokenWallet = () => {
   const [network, setNetwork] = useState('test')
 
   return (
     <VeChainProvider config={NETWORKS[network]}>
+      <center>
+        <Radio.Group onChange={(e) => setNetwork(e.target.value)} value={network}>
+          <Radio value={'test'}>TestNet</Radio>
+          <Radio value={'main'}>MainNet</Radio>
+        </Radio.Group>
+        <Divider />
+      </center>
+
+      <Tokens />
+    </VeChainProvider>
+  )
+
+  function Tokens() {
+    const { tokens } = useTokens()
+
+    return (
       <Row gutter={[16, 16]}>
 
-        <Col span={12}>
-          <Radio.Group onChange={(e) => setNetwork(e.target.value)} value={network}>
-            <Radio value={'test'}>TestNet</Radio>
-            <Radio value={'main'}>MainNet</Radio>
-          </Radio.Group>
-        </Col>
-
-        <Col span={12}>
+        <Col span={24}>
           <Account />
         </Col>
 
@@ -38,8 +46,9 @@ export const Wallet = () => {
           />
         </Col>
       </Row>
-    </VeChainProvider>
-  )
+    )
+
+  }
 
 
   function Balance({ address, symbol }) {
@@ -91,4 +100,4 @@ export const Wallet = () => {
 }
 
 
-export default { title: 'Examples/Wallet' }
+export default { title: 'Examples/TokenWallet' }
