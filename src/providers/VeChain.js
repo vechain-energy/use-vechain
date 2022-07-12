@@ -7,13 +7,12 @@ export const VeChainProvider = ({ children, config }) => {
   const [connex, setConnex] = useState()
   const [account, setAccount] = useLocalStorage('account')
 
-  const connect = useCallback(async ({ comment = 'sign in' }) => {
+  const connect = useCallback(async (payloadOrContent = 'identitication') => {
+    console.log(payloadOrContent)
+    const payload = typeof (payloadOrContent) === 'object' ? { ...payloadOrContent } : { type: 'text', content: payloadOrContent }
     const certificate = {
-      purpose: 'identification',
-      payload: {
-        type: 'text',
-        content: comment
-      }
+      purpose: 'agreement',
+      payload
     }
 
     const result = await connex.vendor.sign('cert', certificate).request()
@@ -36,7 +35,7 @@ export const VeChainProvider = ({ children, config }) => {
     while (!receipt) {
       await connex.thor.ticker().next()
       receipt = await transaction.getReceipt()
-    } 
+    }
 
     if (receipt.reverted) {
       const transactionData = await transaction.get()

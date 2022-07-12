@@ -22,22 +22,30 @@ Export | Description
 `disconnect` | forgets the current user
 
 
-### Example
+### Connection example
 
-export const Account = () => {
+export const Account = ({ message } =  {}) => {
   const { account, error, isLoading, connect, disconnect } = useAccount()
   const Address = () => <Typography.Text type='secondary'>{account.slice(0, 4)}…{account.slice(-4)}</Typography.Text>
   return (
     <div>
       {!!error && <div>Error: {error}</div>}
       {account && <Button block onClick={disconnect} danger shape='round' icon={<Address />}>&nbsp;sign out</Button>}
-      {!account && <Button block onClick={connect} loading={isLoading} shape='round'>sign in</Button>}
+      {!account && <Button block onClick={() => connect(message)} loading={isLoading} shape='round'>sign in</Button>}
     </div>
   )
 }
 
 <Canvas withSource="open">
-  <Story name="example">
+  <Story name="connect()" args={{ message: 'test sign in' }}>
     {Account.bind()}
   </Story>
 </Canvas>
+
+`connect()` can be called with an optional argument to show a custom message. The argument can be either a string or a payload object. See [Connex.Vendor](https://docs.vechain.org/connex/api.html#connex-vendor) for details about the `payload` of `CertMessage`.
+
+```js
+connect() // uses default text
+connect('custom message')
+connect({ type: 'text', content: 'custom message'})
+```
