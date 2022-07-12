@@ -55,7 +55,7 @@ A context provides raw access to connex and some basic functionality that is use
 import { VeChainContext } from '../providers/VeChain'
 
 export function ExampleComponent () {
-  const { connex, account } = useContext(VeChainContext)
+  const { connex, account, config } = useContext(VeChainContext)
 }
 ```
 
@@ -63,3 +63,4 @@ Export | Description | Usage
 :----- | :---------- | :------
 `connex` | pure connex instance | raw interaction with connex
 `account` | currently signed in user address
+`config` | original given network config 

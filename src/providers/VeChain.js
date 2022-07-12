@@ -31,5 +31,5 @@ export const VeChainProvider = ({ children, config }) => {
     setConnex(connex)
   }, [config])
 
-  return <VeChainContext.Provider value={{ connex, connect, disconnect, account }}>{children}</VeChainContext.Provider>
+  return <VeChainContext.Provider value={{ connex, connect, disconnect, account, config }}>{children}</VeChainContext.Provider>
 }

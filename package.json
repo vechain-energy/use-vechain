@@ -51,6 +51,7 @@
   ],
   "dependencies": {
     "@vechain/connex": "^2.0.11",
-    "@vechain/ethers": "^4.0.27-5"
+    "@vechain/ethers": "^4.0.27-5",
+    "bent": "^7.3.12"
   }
 }

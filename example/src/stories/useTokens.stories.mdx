@@ -1,0 +1,22 @@
+import { useTokens } from '@vechain.energy/use-vechain'
+import { Meta, Story, Canvas } from '@storybook/addon-docs';
+
+# useTokens
+
+<Meta title="Hooks/useTokens" />
+
+Provides access to the official token registry at https://github.com/vechain/token-registry  
+The list is loaded based on the `VeChainProvider` network configuration.
+
+### Example
+
+export const Tokens = () => {
+  const { tokens } = useTokens()
+  return <pre>{JSON.stringify(tokens.slice(0,2), "", 2)}</pre>
+}
+
+<Canvas withSource="open">
+  <Story name="tokens">
+    {Tokens.bind()}
+  </Story>
+</Canvas>
