@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useContract } from '@vechain.energy/use-vechain'
 import { Meta, Story, Canvas } from '@storybook/addon-docs';
+import { Button } from 'antd'
 
 # useContract
 
@@ -8,9 +9,11 @@ import { Meta, Story, Canvas } from '@storybook/addon-docs';
 
 `useContract` generates an interactionable instance of a contract for a given list of ABIs
 
-## Example
+## Reading data
 
-export const Contract = () => {
+View functions will return the decoded data.
+
+export const Reading = () => {
   const [address] = useState('0x0000000000000000000000000000456e65726779')
   const [abis] = useState([{"constant": true, "inputs": [{"name": "_owner", "type": "address"}], "name": "balanceOf", "outputs": [{"name": "balance", "type": "uint256"}], "payable": false, "stateMutability": "view", "type": "function"}])
   const [balance, setBalance] = useState(0)
@@ -26,7 +29,53 @@ export const Contract = () => {
 }
 
 <Canvas withSource="open">
-  <Story name="example">
-    {Contract.bind()}
+  <Story name="Reading">
+    {Reading.bind()}
+  </Story>
+</Canvas>
+
+
+## Writing data
+
+Writing functions return a [transaction visitor](https://docs.vechain.org/connex/api.html#transaction-visitor) or throw an error with the revert reason.
+
+export const Writing = () => {
+  const [address] = useState('0x8384738c995d49c5b692560ae688fc8b51af1059')
+  const [abis] = useState([{"inputs": [],"name": "counter","outputs": [{"internalType": "uint256","name": "value","type": "uint256"}],"stateMutability": "view","type": "function"},{"inputs": [],"name": "increment","outputs": [],"stateMutability": "nonpayable","type": "function"}])
+  const [value, setValue] = useState(0)
+  const [tx, setTx] = useState() 
+  const [loading, setLoading] = useState(false)
+  const { counter, increment } = useContract(address, abis)
+  const handleIncrement = async () => {
+    setLoading(true)
+    try {
+      const tx = await increment()
+      const receipt = await tx.getReceipt()
+      setTx({ tx, receipt })
+    }
+    catch (err) {
+      setTx({error: err.message})
+    }
+    finally {
+      setLoading(false)
+      updateCounter()
+    }
+  }
+  const updateCounter = () => counter().then(({value}) => setValue(value))
+  useEffect(() => {
+    if(!counter) { return }
+    updateCounter()
+  }, [counter])
+  return (
+    <div>
+      Counter Value: {value} <Button onClick={handleIncrement} loading={loading}>increment</Button><br />
+      <pre>{JSON.stringify(tx, "", 2)}</pre>
+    </div>
+  )
+}
+
+<Canvas withSource="open">
+  <Story name="Writing">
+    {Writing.bind()}
   </Story>
 </Canvas>

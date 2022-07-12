@@ -2,7 +2,7 @@ import { useState, useEffect, useContext, useCallback, useMemo } from 'react'
 import { VeChainContext } from '../providers/VeChain'
 
 export function useContract(contractAddress, abis) {
-  const { connex } = useContext(VeChainContext)
+  const { connex, waitForTransactionId } = useContext(VeChainContext)
   const [contract, setContract] = useState()
   const [fns, setFunctions] = useState({})
 
@@ -15,10 +15,20 @@ export function useContract(contractAddress, abis) {
     if (!contract || !abis?.length) { return }
 
     const fns = { _parsed: true }
-    abis.forEach(abi => {
-      const { name } = abi
-      fns[name] = async (...args) => (await contract.method(abi).call(...args)).decoded
-    })
+    abis
+      .filter(({ type }) => type === 'function')
+      .forEach(abi => {
+        const { name, stateMutability } = abi
+        if (stateMutability === 'view') {
+          return fns[name] = async (...args) => (await contract.method(abi).call(...args)).decoded
+        }
+
+        return fns[name] = async (...args) => {
+          const clause = contract.method(abi).asClause(...args)
+          const { txid } = await connex.vendor.sign('tx', [clause]).request()
+          return waitForTransactionId(txid)
+        }
+      })
     setFunctions(fns)
   }, [contract, abis])
 

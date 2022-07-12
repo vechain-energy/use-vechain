@@ -25,3 +25,46 @@ Updated on each new block the current blockchain status is provided.
     {Head.bind()}
   </Story>
 </Canvas>
+
+## `connex`
+
+The pure connex instance for direct interaction
+
+```jsx
+import { useChainState } from '@vechain.energy/use-vechain'
+
+export const Example = () => {
+  const { connex } = useChainState()
+}
+```
+
+## `waitForTransactionId()`
+
+The helper `waitForTransactionId(txId)` waits until a given transaction id is found.
+
+1. If found and successful, a [transaction visitor](https://docs.vechain.org/connex/api.html#transaction-visitor) is returned.
+1. If found and reverted, an error is throw with the revert reason.
+
+```jsx
+import { useChainState } from '@vechain.energy/use-vechain'
+
+export const Example = () => {
+  const { connex, waitForTransactionId } = useChainState()
+
+  // your code
+  // ...
+
+    const { txid } = await connex.vendor.sign('tx', [clause]).request()
+    try {
+      const transaction = await waitForTransactionId(txid)
+
+      // transaction visitor can instantly be used
+      const receipt = await transaction.getReceipt()
+    }
+    catch (err) {
+      console.log('reverted because of', err.message)
+    }
+  
+  // ...
+}
+```

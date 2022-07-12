@@ -30,5 +30,27 @@ export const VeChainProvider = ({ children, config }) => {
     setConnex(new Connex(config))
   }, [config])
 
-  return <VeChainContext.Provider value={{ connex, connect, disconnect, account, config }}>{children}</VeChainContext.Provider>
+  const waitForTransactionId = useCallback(async function waitForTransactionId(id) {
+    const transaction = connex.thor.transaction(id)
+    let receipt = await transaction.getReceipt()
+    while (!receipt) {
+      await connex.thor.ticker().next()
+      receipt = await transaction.getReceipt()
+    } 
+
+    if (receipt.reverted) {
+      const transactionData = await transaction.get()
+      const explainedTransaction = await connex.thor.explain(transactionData.clauses)
+        .caller(transactionData.origin)
+        .execute()
+
+      const revertReasons = explainedTransaction.map(({ revertReason }) => revertReason).join(' ,')
+
+      throw new Error(revertReasons || 'Transaction was reverted')
+    }
+
+    return transaction
+  }, [connex])
+
+  return <VeChainContext.Provider value={{ connex, connect, disconnect, account, config, waitForTransactionId }}>{children}</VeChainContext.Provider>
 }

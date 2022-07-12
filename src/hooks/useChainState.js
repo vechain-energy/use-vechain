@@ -2,7 +2,7 @@ import { useState, useEffect, useContext } from 'react'
 import { VeChainContext } from '../providers/VeChain'
 
 export function useChainState () {
-  const { connex } = useContext(VeChainContext)
+  const { connex, waitForTransactionId } = useContext(VeChainContext)
   const [head, setHead] = useState()
 
   useEffect(() => {
@@ -16,6 +16,8 @@ export function useChainState () {
   }, [connex, head])
 
   return {
-    head
+    connex,
+    head,
+    waitForTransactionId
   }
 }
