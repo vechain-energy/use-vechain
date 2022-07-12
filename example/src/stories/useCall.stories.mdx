@@ -6,9 +6,11 @@ import { Meta, Story, Canvas } from '@storybook/addon-docs';
 
 <Meta title="Hooks/useCalls" />
 
-`useCalls` provides a simply wrapper for contract interactions for a known contract address, ABI/Method and arguments.
+`useCall` and `useCalls` provides simple wrappers for contract interactions for a known contract address, ABI/Method and arguments.
 
-## Example
+## `useCall`
+
+Get result for a single function call.
 
 export const BalanceOf = () => {
   const contractAddress = '0x0000000000000000000000000000456e65726779'
@@ -25,6 +27,9 @@ export const BalanceOf = () => {
 </Canvas>
 
 
+## `useCalls`
+
+Get multiple results for function calls. The returned list is in the same order as the given ABIs.
 
 export const BalanceAndTotalSupply = () => {
   const [contractAddress] = useState('0x0000000000000000000000000000456e65726779')
