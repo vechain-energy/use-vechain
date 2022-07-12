@@ -1,0 +1,32 @@
+import { useState, useEffect } from 'react'
+import { useContract } from '@vechain.energy/use-vechain'
+import { Meta, Story, Canvas } from '@storybook/addon-docs';
+
+# useContract
+
+<Meta title="Hooks/useContract" />
+
+`useContract` generates an interactionable instance of a contract for a given list of ABIs
+
+## Example
+
+export const Contract = () => {
+  const [address] = useState('0x0000000000000000000000000000456e65726779')
+  const [abis] = useState([{"constant": true, "inputs": [{"name": "_owner", "type": "address"}], "name": "balanceOf", "outputs": [{"name": "balance", "type": "uint256"}], "payable": false, "stateMutability": "view", "type": "function"}])
+  const [balance, setBalance] = useState(0)
+  // get balanceOf function
+  const { balanceOf } = useContract(address, abis)
+  // call balance of address(0) and set into state
+  useEffect(() => {
+    if(!balanceOf) { return }
+    balanceOf('0x0000000000000000000000000000000000000000').then(({balance}) => setBalance(balance))
+  }, [balanceOf])
+  // debug output
+  return <pre>Balance: {balance}</pre>
+}
+
+<Canvas withSource="open">
+  <Story name="example">
+    {Contract.bind()}
+  </Story>
+</Canvas>

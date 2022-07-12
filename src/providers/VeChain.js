@@ -27,8 +27,7 @@ export const VeChainProvider = ({ children, config }) => {
   }, [])
 
   useEffect(() => {
-    const connex = new Connex(config)
-    setConnex(connex)
+    setConnex(new Connex(config))
   }, [config])
 
   return <VeChainContext.Provider value={{ connex, connect, disconnect, account, config }}>{children}</VeChainContext.Provider>

@@ -5,4 +5,7 @@ import { useAccount } from './hooks/useAccount'
 import { useBalance } from './hooks/useBalance'
 import { useTokens } from './hooks/useTokens'
 
-export { VeChainProvider, useChainState, useAccount, useBalance, useTokens }
+import { useContract } from './hooks/useContract'
+import { useCall, useCalls } from './hooks/useCalls'
+
+export { VeChainProvider, useChainState, useAccount, useBalance, useTokens, useContract, useCall, useCalls }

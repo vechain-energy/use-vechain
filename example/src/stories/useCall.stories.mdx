@@ -1,0 +1,41 @@
+import { useState, useEffect } from 'react'
+import { useCall, useCalls, useChainState } from '@vechain.energy/use-vechain'
+import { Meta, Story, Canvas } from '@storybook/addon-docs';
+
+# useCall & useCalls
+
+<Meta title="Hooks/useCalls" />
+
+`useCalls` provides a simply wrapper for contract interactions for a known contract address, ABI/Method and arguments.
+
+## Example
+
+export const BalanceOf = () => {
+  const contractAddress = '0x0000000000000000000000000000456e65726779'
+  const methodAbi = {"constant": true, "inputs": [{"name": "_owner", "type": "address"}], "name": "balanceOf", "outputs": [{"name": "balance", "type": "uint256"}], "payable": false, "stateMutability": "view", "type": "function"}
+  const args = ['0x0000000000000000000000000000000000000000']
+  const { balance } = useCall(contractAddress, methodAbi, args)
+  return <pre>Balance: {balance}</pre>
+}
+
+<Canvas withSource="open">
+  <Story name="single call">
+    {BalanceOf.bind()}
+  </Story>
+</Canvas>
+
+
+
+export const BalanceAndTotalSupply = () => {
+  const [contractAddress] = useState('0x0000000000000000000000000000456e65726779')
+  const [methodAbis] = useState([{"constant": true, "inputs": [{"name": "_owner", "type": "address"}], "name": "balanceOf", "outputs": [{"name": "balance", "type": "uint256"}], "payable": false, "stateMutability": "view", "type": "function"}, {"constant": true, "inputs": [], "name": "totalSupply", "outputs": [{"name": "totalSupply", "type": "uint256"}], "payable": false, "stateMutability": "view", "type": "function"}])
+  const [argsList] = useState([['0x0000000000000000000000000000000000000000'], []])
+  const [result1, result2] = useCalls(contractAddress, methodAbis, argsList)
+  return <pre>Balance: {result1 ? result1.balance : 0} of {result2 ? result2.totalSupply : 0}</pre>
+}
+
+<Canvas withSource="open">
+  <Story name="multi call">
+    {BalanceAndTotalSupply.bind()}
+  </Story>
+</Canvas>
