@@ -51,5 +51,16 @@ export const VeChainProvider = ({ children, config }) => {
     return transaction
   }, [connex])
 
-  return <VeChainContext.Provider value={{ connex, connect, disconnect, account, config, waitForTransactionId }}>{children}</VeChainContext.Provider>
+  const submitTransaction = useCallback(async function submitTransaction(clauses, options = {}) {
+    const transaction = connex.vendor.sign('tx', clauses)
+    for (const key of Object.keys(options)) {
+      transaction[key].call(transaction, options[key])
+    }
+
+    const { txid } = await transaction.request()
+    return txid
+  }, [connex])
+
+
+  return <VeChainContext.Provider value={{ connex, connect, disconnect, account, config, submitTransaction, waitForTransactionId }}>{children}</VeChainContext.Provider>
 }

@@ -79,3 +79,63 @@ export const Writing = () => {
     {Writing.bind()}
   </Story>
 </Canvas>
+
+
+### Options
+
+export const WritingComment = () => {
+  const [address] = useState('0x8384738c995d49c5b692560ae688fc8b51af1059')
+  const [abis] = useState([{"inputs": [],"name": "counter","outputs": [{"internalType": "uint256","name": "value","type": "uint256"}],"stateMutability": "view","type": "function"},{"inputs": [],"name": "increment","outputs": [],"stateMutability": "nonpayable","type": "function"}])
+  const [value, setValue] = useState(0)
+  const [tx, setTx] = useState() 
+  const [loading, setLoading] = useState(false)
+  const { counter, increment } = useContract(address, abis)
+  const handleIncrement = async () => {
+    setLoading(true)
+    try {
+      const tx = await increment({ comment: 'increment by +1', delegate: 'https://sponsor-testnet.vechain.energy/by/90' })
+      const receipt = await tx.getReceipt()
+      setTx({ tx, receipt })
+    }
+    catch (err) {
+      setTx({error: err.message})
+    }
+    finally {
+      setLoading(false)
+      updateCounter()
+    }
+  }
+  const updateCounter = () => counter().then(({value}) => setValue(value))
+  useEffect(() => {
+    if(!counter) { return }
+    updateCounter()
+  }, [counter])
+  return (
+    <div>
+      Counter Value: {value} <Button onClick={handleIncrement} loading={loading}>increment</Button><br />
+      <pre>{JSON.stringify(tx, "", 2)}</pre>
+    </div>
+  )
+}
+
+All options of the [transaction service](https://docs.vechain.org/connex/api.html#transaction-signing-service) are available by passing an object as additional argument.
+
+All parameters are optional:
+
+```json
+{
+  "signer": "(addr: string): this: Enforces the specified address to sign the transaction",
+  "gas": "(gas: number): this: Enforces the specified number as the maximum gas that can be consumed for the transaction",
+  "dependsOn": "(txid: string): this: Set another txid as dependency (Reference)",
+  "link": "(url: string): this: Set the link to reveal transaction-related information, the link will be used for connex to assemble a callback url by replacing the placeholder {txid} by Transaction ID",
+  "comment": "(text: string): this: Set the comment for the transaction that will be revealed to the user",
+  "delegate": "(url: string, signer: string): this: Enable VIP-191 by setting the url and the fee payer's address. Wallets(Sync2) will request fee payer's signature with the url and required parameters, read this (opens new window)to get the detail about building a VIP-191 service",
+}
+```
+
+<Canvas withSource="open">
+  <Story name="Writing With custom comment">
+    {WritingComment.bind()}
+  </Story>
+</Canvas>
+
