@@ -9,7 +9,7 @@ import { useChainState } from '@vechain.energy/use-vechain'
 yarn add @vechain.energy/use-vechain
 ```
 
-Add `VeChainProvider` into your `index.js`:
+**Add `VeChainProvider` into your `index.js`:**
 
 ```jsx
 import React from 'react';
@@ -35,7 +35,7 @@ reportWebVitals();
 ```
 
 
-Start using the hooks:
+**Start using the hooks:**
 
 ```jsx
 import { useChainState } from '@vechain.energy/use-vechain'
@@ -45,3 +45,14 @@ export const App = () => {
   return <pre>{JSON.stringify(head, '', 2)}</pre>
 }
 ```
+
+
+_**A note regarding Sync2 & Sync Browser**_
+
+* _Sync Browser will opens Sync2 if the network does not match (for example: Sync Browser = MainNet, VeChainProvider set to TestNet)_
+* _Sync Browser is fully supported including fee delegation_
+
+
+---
+
+Please report any issues or missing features at [https://gitlab.com/vechain.energy/common/use-vechain/-/issues](https://gitlab.com/vechain.energy/common/use-vechain/-/issues).

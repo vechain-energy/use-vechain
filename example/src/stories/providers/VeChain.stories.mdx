@@ -24,7 +24,10 @@ All hooks rely on the VeChainProvider to interact with VeChain, it is required.
 Default options can be defined for all transactions. If transaction define the same option keys, transaction options are used.
 
 ```jsx
-<VeChainProvider config={{ node: 'https://testnet.veblocks.net', network: 'test' }} options={{ delegate: 'https://sponsor-testnet.vechain.energy/by/90' }}>
+<VeChainProvider
+  config={{ node: 'https://testnet.veblocks.net', network: 'test' }}
+  options={{ delegate: 'https://sponsor-testnet.vechain.energy/by/90' }}
+>
   <App />
 </VeChainProvider>
 ```
