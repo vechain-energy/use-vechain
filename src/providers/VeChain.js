@@ -3,9 +3,10 @@ import { useLocalStorage } from '../hooks/useLocalStorage'
 import Connex from '@vechain/connex'
 
 export const VeChainContext = createContext()
-export const VeChainProvider = ({ children, config }) => {
+export const VeChainProvider = ({ children, config, options }) => {
   const [connex, setConnex] = useState()
   const [account, setAccount] = useLocalStorage('account')
+  const [defaultOptions, setDefaultOptions] = useState({})
 
   const connect = useCallback(async (payloadOrContent = 'identitication') => {
     console.log(payloadOrContent)
@@ -28,6 +29,11 @@ export const VeChainProvider = ({ children, config }) => {
   useEffect(() => {
     setConnex(new Connex(config))
   }, [config])
+
+
+  useEffect(() => {
+    setDefaultOptions(options)
+  }, [options])
 
   const waitForTransactionId = useCallback(async function waitForTransactionId(id) {
     const transaction = connex.thor.transaction(id)
@@ -53,14 +59,15 @@ export const VeChainProvider = ({ children, config }) => {
 
   const submitTransaction = useCallback(async function submitTransaction(clauses, options = {}) {
     const transaction = connex.vendor.sign('tx', clauses)
-    for (const key of Object.keys(options)) {
-      transaction[key].call(transaction, options[key])
+    const optionsWithDefaults = { ...defaultOptions, ...options }
+    for (const key of Object.keys(optionsWithDefaults)) {
+      transaction[key].call(transaction, optionsWithDefaults[key])
     }
 
     const { txid } = await transaction.request()
     return txid
-  }, [connex])
+  }, [connex, defaultOptions])
 
 
-  return <VeChainContext.Provider value={{ connex, connect, disconnect, account, config, submitTransaction, waitForTransactionId }}>{children}</VeChainContext.Provider>
+  return <VeChainContext.Provider value={{ connex, connect, disconnect, account, config, options, submitTransaction, waitForTransactionId }}>{children}</VeChainContext.Provider>
 }

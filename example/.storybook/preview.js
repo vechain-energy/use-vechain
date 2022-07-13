@@ -15,7 +15,7 @@ export const parameters = {
   },
 }
 
-const TestNetProvider = (Story) => <VeChainProvider config={{ node: 'https://testnet.veblocks.net', network: 'test' }}>{<Story />}</VeChainProvider>
+const TestNetProvider = (Story) => <VeChainProvider config={{ node: 'https://testnet.veblocks.net', network: 'test' }} options={{ delegate: 'https://sponsor-testnet.vechain.energy/by/90' }}>{<Story />}</VeChainProvider>
 addDecorator(TestNetProvider);
 
 addParameters({

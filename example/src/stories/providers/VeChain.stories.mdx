@@ -19,7 +19,17 @@ Configuration to connex is passed using the `config` property:
 
 All hooks rely on the VeChainProvider to interact with VeChain, it is required.
 
-### Example
+### Options
+
+Default options can be defined for all transactions. If transaction define the same option keys, transaction options are used.
+
+```jsx
+<VeChainProvider config={{ node: 'https://testnet.veblocks.net', network: 'test' }} options={{ delegate: 'https://sponsor-testnet.vechain.energy/by/90' }}>
+  <App />
+</VeChainProvider>
+```
+
+### Example Implementation
 
 Example for a `create-react-app` application and its `index.js`:
 
@@ -46,6 +56,7 @@ root.render(
 reportWebVitals();
 ```
 
+
 ## VeChainContext
 
 A context provides raw access to connex and some basic functionality that is used within the provided hooks.
@@ -64,3 +75,4 @@ Export | Description | Usage
 `connex` | pure connex instance | raw interaction with connex
 `account` | currently signed in user address
 `config` | original given network config 
+`options` | original given network options 
