@@ -30,12 +30,11 @@ export const VeChainProvider = ({ children, config, options }) => {
     setConnex(new Connex(config))
   }, [config])
 
-
   useEffect(() => {
     setDefaultOptions(options)
   }, [options])
 
-  const waitForTransactionId = useCallback(async function waitForTransactionId(id) {
+  const waitForTransactionId = useCallback(async function waitForTransactionId (id) {
     const transaction = connex.thor.transaction(id)
     let receipt = await transaction.getReceipt()
     while (!receipt) {
@@ -57,17 +56,17 @@ export const VeChainProvider = ({ children, config, options }) => {
     return transaction
   }, [connex])
 
-  const submitTransaction = useCallback(async function submitTransaction(clauses, options = {}) {
+  const submitTransaction = useCallback(async function submitTransaction (clauses, options = {}) {
     const transaction = connex.vendor.sign('tx', clauses)
     const optionsWithDefaults = { ...defaultOptions, ...options }
     for (const key of Object.keys(optionsWithDefaults)) {
+      /* eslint-disable no-useless-call */
       transaction[key].call(transaction, optionsWithDefaults[key])
     }
 
     const { txid } = await transaction.request()
     return txid
   }, [connex, defaultOptions])
-
 
   return <VeChainContext.Provider value={{ connex, connect, disconnect, account, config, options, submitTransaction, waitForTransactionId }}>{children}</VeChainContext.Provider>
 }

@@ -4,13 +4,13 @@ import { Button, Typography, List, Avatar, Row, Col, Radio, Divider, Modal, Inpu
 import { VeChainProvider, useAccount, useTokens, useContract } from '@vechain.energy/use-vechain'
 const { Text } = Typography
 
-const AbiBalanceOf = { "constant": true, "inputs": [{ "name": "_owner", "type": "address" }], "name": "balanceOf", "outputs": [{ "name": "balance", "type": "uint256" }], "payable": false, "stateMutability": "view", "type": "function" }
-const AbiTransfer = { "constant": false, "inputs": [{ "name": "_to", "type": "address" }, { "name": "_value", "type": "uint256" }], "name": "transfer", "outputs": [{ "name": "", "type": "bool" }], "payable": false, "stateMutability": "nonpayable", "type": "function" }
+const AbiBalanceOf = { constant: true, inputs: [{ name: '_owner', type: 'address' }], name: 'balanceOf', outputs: [{ name: 'balance', type: 'uint256' }], payable: false, stateMutability: 'view', type: 'function' }
+const AbiTransfer = { constant: false, inputs: [{ name: '_to', type: 'address' }, { name: '_value', type: 'uint256' }], name: 'transfer', outputs: [{ name: '', type: 'bool' }], payable: false, stateMutability: 'nonpayable', type: 'function' }
 const Abis = [AbiTransfer, AbiBalanceOf]
 
 const NETWORKS = {
-  'main': { config: { node: 'https://mainnet.veblocks.net', network: 'main' } },
-  'test': { config: { node: 'https://testnet.veblocks.net', network: 'test' }, options: { delegate: 'https://sponsor-testnet.vechain.energy/by/90' } }
+  main: { config: { node: 'https://mainnet.veblocks.net', network: 'main' } },
+  test: { config: { node: 'https://testnet.veblocks.net', network: 'test' }, options: { delegate: 'https://sponsor-testnet.vechain.energy/by/90' } }
 }
 
 export const TokenWallet = () => {
@@ -20,8 +20,8 @@ export const TokenWallet = () => {
     <VeChainProvider {...NETWORKS[network]}>
       <center>
         <Radio.Group onChange={(e) => setNetwork(e.target.value)} value={network}>
-          <Radio value={'test'}>TestNet</Radio>
-          <Radio value={'main'}>MainNet</Radio>
+          <Radio value='test'>TestNet</Radio>
+          <Radio value='main'>MainNet</Radio>
         </Radio.Group>
         <Divider />
       </center>
@@ -30,7 +30,7 @@ export const TokenWallet = () => {
     </VeChainProvider>
   )
 
-  function Tokens() {
+  function Tokens () {
     const { tokens } = useTokens()
 
     return (
@@ -43,17 +43,15 @@ export const TokenWallet = () => {
         <Col span={24}>
           <List
             dataSource={tokens}
-            rowKey={'address'}
+            rowKey='address'
             renderItem={token => <Token key={token.address} {...token} />}
           />
         </Col>
       </Row>
     )
-
   }
 
-
-  function Balance({ address, symbol }) {
+  function Balance ({ address, symbol }) {
     const { account } = useAccount()
     const [balance, setBalance] = useState(0)
     const [showTransfer, setShowTransfer] = useState(false)
@@ -66,14 +64,12 @@ export const TokenWallet = () => {
     const displayTransfer = () => setShowTransfer(true)
     const hideTransfer = () => setShowTransfer(false)
 
-
     const updateBalance = useCallback(async () => {
       if (!balanceOf || !account) { return }
       const { balance } = await balanceOf(account)
       const readableBalance = account && balance ? ethers.utils.formatEther(new ethers.utils.BigNumber(balance)) : 0
       setBalance(readableBalance)
     }, [balanceOf, account])
-
 
     const handleTransfer = async () => {
       setLoading(true)
@@ -83,15 +79,12 @@ export const TokenWallet = () => {
         await transfer(recipient, balance)
         await updateBalance()
         hideTransfer()
-      }
-      catch (err) {
+      } catch (err) {
         setError(err.message)
-      }
-      finally {
+      } finally {
         setLoading(false)
       }
     }
-
 
     useEffect(() => {
       updateBalance()
@@ -105,17 +98,15 @@ export const TokenWallet = () => {
           {balance > 0 && <Col span={24} align='right'><Button size='small' type='link' onClick={displayTransfer}>transfer</Button></Col>}
         </Row>
 
-        <Modal title="Transfer all tokens to" visible={showTransfer} onOk={handleTransfer} onCancel={hideTransfer} maskClosable={false} confirmLoading={loading}>
+        <Modal title='Transfer all tokens to' visible={showTransfer} onOk={handleTransfer} onCancel={hideTransfer} maskClosable={false} confirmLoading={loading}>
           {!!error && <div>{error}</div>}
-          <Input placeholder="0x…" onChange={(e) => setRecipient(e.target.value)} />
+          <Input placeholder='0x…' onChange={(e) => setRecipient(e.target.value)} />
         </Modal>
       </>
     )
   }
 
-
-  function Token({ address, name, symbol, desc, icon }) {
-
+  function Token ({ address, name, symbol, desc, icon }) {
     return (
       <List.Item extra={<Balance address={address} symbol={symbol} />}>
         <List.Item.Meta avatar={<Avatar src={icon} />} title={name} description={desc} />
@@ -123,7 +114,7 @@ export const TokenWallet = () => {
     )
   }
 
-  function Account() {
+  function Account () {
     const { account, error, isLoading, connect, disconnect } = useAccount()
 
     const Address = () => <Text type='secondary'>{account.slice(0, 4)}…{account.slice(-4)}</Text>
@@ -137,6 +128,5 @@ export const TokenWallet = () => {
     )
   }
 }
-
 
 export default { title: 'Examples/TokenWallet' }

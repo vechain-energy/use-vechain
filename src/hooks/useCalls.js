@@ -1,10 +1,9 @@
-import { useState, useEffect, useContext } from 'react'
+import { useState, useEffect } from 'react'
 import { useContract } from './useContract'
 
-export function useCalls(contractAddress, abis, argsList) {
+export function useCalls (contractAddress, abis, argsList) {
   const [results, setResults] = useState([])
   const contract = useContract(contractAddress, abis)
-
 
   useEffect(() => {
     if (!contract?._parsed || !argsList?.length) { return }
@@ -14,13 +13,13 @@ export function useCalls(contractAddress, abis, argsList) {
   return results
 }
 
-export function useCall(contractAddress, abi, args) {
+export function useCall (contractAddress, abi, args) {
   const [abis] = useState([abi])
   const [argsList] = useState([args])
   return useCalls(contractAddress, abis, argsList)[0] || {}
 }
 
-async function executeCalls({ contract, abis, argsList }) {
+async function executeCalls ({ contract, abis, argsList }) {
   const results = []
 
   for (const index in abis) {

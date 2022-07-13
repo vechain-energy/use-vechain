@@ -3,7 +3,7 @@ import { useState, useEffect, useContext } from 'react'
 import { VeChainContext } from '../providers/VeChain'
 import { useChainState } from '../hooks/useChainState'
 
-export function useBalance(address) {
+export function useBalance (address) {
   const { connex } = useContext(VeChainContext)
   const { head } = useChainState()
 
