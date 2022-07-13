@@ -8,7 +8,7 @@ export const VeChainProvider = ({ children, config, options }) => {
   const [account, setAccount] = useLocalStorage('account')
   const [defaultOptions, setDefaultOptions] = useState({})
 
-  const connect = useCallback(async (payloadOrContent = 'identitication') => {
+  const connect = useCallback(async (payloadOrContent = 'identification') => {
     console.log(payloadOrContent)
     const payload = typeof (payloadOrContent) === 'object' ? { ...payloadOrContent } : { type: 'text', content: payloadOrContent }
     const certificate = {
