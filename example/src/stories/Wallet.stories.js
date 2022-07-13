@@ -68,7 +68,7 @@ export const TokenWallet = () => {
 
 
     const updateBalance = useCallback(async () => {
-      if (!balanceOf) { return }
+      if (!balanceOf || !account) { return }
       const { balance } = await balanceOf(account)
       const readableBalance = account && balance ? ethers.utils.formatEther(new ethers.utils.BigNumber(balance)) : 0
       setBalance(readableBalance)
@@ -132,7 +132,7 @@ export const TokenWallet = () => {
       <>
         {!!error && <div>Error: {error}</div>}
         {account && <Button block onClick={disconnect} danger shape='round' icon={<Address />}>&nbsp;sign out</Button>}
-        {!account && <Button block onClick={connect} loading={isLoading} shape='round'>sign in</Button>}
+        {!account && <Button block onClick={() => connect()} loading={isLoading} shape='round'>sign in</Button>}
       </>
     )
   }
