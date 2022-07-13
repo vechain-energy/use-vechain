@@ -1,6 +1,6 @@
 {
   "name": "@vechain.energy/use-vechain",
-  "version": "0.4.1",
+  "version": "0.4.2",
   "description": "simplified interaction with VeChain",
   "author": "favo <npm@favo.org>",
   "license": "MIT",
