@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react'
 import { ethers } from '@vechain/ethers'
 import { Button, Typography, List, Avatar, Row, Col, Radio, Divider, Modal, Input } from 'antd'
-import { VeChainProvider, useAccount, useTokens, useCall, useContract } from '@vechain.energy/use-vechain'
+import { VeChainProvider, useAccount, useTokens, useContract } from '@vechain.energy/use-vechain'
 const { Text } = Typography
 
 const AbiBalanceOf = { "constant": true, "inputs": [{ "name": "_owner", "type": "address" }], "name": "balanceOf", "outputs": [{ "name": "balance", "type": "uint256" }], "payable": false, "stateMutability": "view", "type": "function" }
@@ -68,6 +68,7 @@ export const TokenWallet = () => {
 
 
     const updateBalance = useCallback(async () => {
+      if (!balanceOf) { return }
       const { balance } = await balanceOf(account)
       const readableBalance = account && balance ? ethers.utils.formatEther(new ethers.utils.BigNumber(balance)) : 0
       setBalance(readableBalance)
