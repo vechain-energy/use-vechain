@@ -1,0 +1,97 @@
+import { useState, useEffect } from 'react'
+import { useContract, useMultiTask } from '@vechain.energy/use-vechain'
+import { Meta, Story, Canvas } from '@storybook/addon-docs';
+import { Button } from 'antd'
+
+# useMultiTask – Multi-Clause Transactions
+
+<Meta title="Hooks/useMultiTask" />
+
+export const MultiTask = () => {
+  const [address] = useState('0x8384738c995d49c5b692560ae688fc8b51af1059')
+  const [abis] = useState([{"inputs": [],"name": "counter","outputs": [{"internalType": "uint256","name": "value","type": "uint256"}],"stateMutability": "view","type": "function"},{"inputs": [],"name": "increment","outputs": [],"stateMutability": "nonpayable","type": "function"}])
+  const [value, setValue] = useState(0)
+  const [tx, setTx] = useState() 
+  const [loading, setLoading] = useState(false)
+  const { multiTask } = useMultiTask()
+  const { counter, increment } = useContract(address, abis)
+  const handleIncrement = async () => {
+    setLoading(true)
+    try {
+      const tx = await multiTask(transaction => {
+        increment({ comment: 'increment by +1', transaction })
+        increment({ comment: 'increment by +1', transaction })
+        increment({ comment: 'increment by +1', transaction })
+      }, { comment: 'increment by +3', delegate: 'https://sponsor-testnet.vechain.energy/by/90' })
+      const receipt = await tx.getReceipt()
+      setTx({ tx, receipt })
+    }
+    catch (err) {
+      setTx({error: err.message})
+    }
+    finally {
+      setLoading(false)
+      updateCounter()
+    }
+  }
+  const updateCounter = () => counter().then(({value}) => setValue(value))
+  useEffect(() => {
+    if(!counter) { return }
+    updateCounter()
+  }, [counter])
+  return (
+    <div>
+      Counter Value: {value} <Button onClick={handleIncrement} loading={loading}>increment by 3</Button><br />
+      <pre>{JSON.stringify(tx, "", 2)}</pre>
+    </div>
+  )
+}
+
+* By default all contract functions are submitted with a single transaction and one clause.  
+* [VeChain's ability for multiple clauses](https://docs.vechain.org/thor/learn/transaction-model.html#clauses) in a single transaction is available by wrapping contract functions with `multiTask()` and `commit()`, similar to a database transaction.
+* Transaction options can be passed to `multiTask()` and `commit()` and are combined. Options in `commit()` will overwrite existing options from `multiTask()`
+
+```json
+{
+  "signer": "(addr: string): this: Enforces the specified address to sign the transaction",
+  "gas": "(gas: number): this: Enforces the specified number as the maximum gas that can be consumed for the transaction",
+  "dependsOn": "(txid: string): this: Set another txid as dependency (Reference)",
+  "link": "(url: string): this: Set the link to reveal transaction-related information, the link will be used for connex to assemble a callback url by replacing the placeholder {txid} by Transaction ID",
+  "comment": "(text: string): this: Set the comment for the transaction that will be revealed to the user",
+  "delegate": "(url: string, signer: string): this: Enable VIP-191 by setting the url and the fee payer's address. Wallets(Sync2) will request fee payer's signature with the url and required parameters, read this (opens new window)to get the detail about building a VIP-191 service"
+}
+```
+
+**Variant 1 Wrapping**
+
+```js
+// …
+const { multiTask } = useMultiTask()
+const { increment } = useContract(address, abis)
+// …
+const transaction = multiTask()
+increment({ transaction }) // will be queued
+increment({ transaction }) // will be queued as well
+await transaction.commit() // will execute both increment() calls
+```
+
+**Variant 2 Auto-Commit**
+
+```js
+// …
+const { multiTask } = useMultiTask()
+const { increment } = useContract(address, abis)
+// …
+await multiTask(async (transaction) => {
+  increment({ transaction }) // will be queued
+  increment({ transaction }) // will be queued as well
+}) // will auto commit at end of function
+```
+
+The `transaction` needs to be passed to each function, if not, the function will be executed immediately as a single-clause-transaction.
+
+<Canvas withSource="open">
+  <Story name="Multi-Clause Transactions">
+    {MultiTask.bind()}
+  </Story>
+</Canvas>
