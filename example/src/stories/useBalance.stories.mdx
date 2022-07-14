@@ -1,5 +1,6 @@
+import { useState, useEffect } from 'react'
 import { Meta, Story, Canvas } from '@storybook/addon-docs';
-import { Descriptions } from 'antd'
+import { Descriptions, Button } from 'antd'
 import { useBalance } from '@vechain.energy/use-vechain'
 
 # useBalance
@@ -8,6 +9,7 @@ import { useBalance } from '@vechain.energy/use-vechain'
 
 Returns up-to-date balance of VET and VTHO for any given address. The balance updates with each block.
 
+## Balance for an address
 
 export const Balance = () => {
   const address = '0x0000000000000000000000000000000000000000'
@@ -24,5 +26,55 @@ export const Balance = () => {
 <Canvas withSource="open">
   <Story name="balance">
     {Balance.bind()}
+  </Story>
+</Canvas>
+
+## Manually fetching balance for an address
+
+`balanceOf(address)` fetches the balance for an address on demand. The balance is in a formatted and readable version.
+
+export const BalanceOf = () => {
+  const { balanceOf } = useBalance()
+  const [balance, setBalance] = useState({})
+  const handleUpdate = async () => {
+    const balance = await balanceOf('0x0000000000000000000000000000000000000000')
+    setBalance(balance)
+  }
+  return (
+    <Descriptions bordered column={1}>
+      <Descriptions.Item label='VET'>{balance.vet}</Descriptions.Item>
+      <Descriptions.Item label='VTHO'>{balance.vtho}</Descriptions.Item>
+      <Descriptions.Item><Button block onClick={handleUpdate}>get current balance</Button></Descriptions.Item>
+    </Descriptions>
+  )
+}
+
+<Canvas withSource="open">
+  <Story name="balanceOf(address)">
+    {BalanceOf.bind()}
+  </Story>
+</Canvas>
+
+Optional `raw` flag will return the results as hexadecimal version.
+
+export const BalanceOfRaw = () => {
+  const { balanceOf } = useBalance()
+  const [balance, setBalance] = useState({})
+  const handleUpdate = async () => {
+    const balance = await balanceOf('0x0000000000000000000000000000000000000000', true)
+    setBalance(balance)
+  }
+  return (
+    <Descriptions bordered column={1}>
+      <Descriptions.Item label='VET'>{balance.vet}</Descriptions.Item>
+      <Descriptions.Item label='VTHO'>{balance.vtho}</Descriptions.Item>
+      <Descriptions.Item><Button block onClick={handleUpdate}>get current balance</Button></Descriptions.Item>
+    </Descriptions>
+  )
+}
+
+<Canvas withSource="open">
+  <Story name="balanceOf(address, raw)">
+    {BalanceOfRaw.bind()}
   </Story>
 </Canvas>
