@@ -43,6 +43,7 @@ export function useContract (contractAddress, abis) {
 
         if (options.transaction) {
           options.transaction._addClause(clause)
+          return options.transaction
         } else {
           const txid = await submitTransaction([clause], options)
           return waitForTransactionId(txid)
