@@ -1,6 +1,10 @@
 import React, { useState, useEffect, useCallback, createContext } from 'react'
 import { useLocalStorage } from '../hooks/useLocalStorage'
 import Connex from '@vechain/connex'
+import { Transaction } from 'thor-devkit'
+import bent from 'bent'
+
+const postJSON = bent('POST', 'json')
 
 export const VeChainContext = createContext()
 export const VeChainProvider = ({ children, config, options }) => {
@@ -53,15 +57,50 @@ export const VeChainProvider = ({ children, config, options }) => {
 
   const submitTransaction = useCallback(async function submitTransaction (clauses, options = {}) {
     const transaction = connex.vendor.sign('tx', clauses)
-    const optionsWithDefaults = { ...defaultOptions, ...options }
+    const { delegateTest, ...optionsWithDefaults } = { ...defaultOptions, ...options }
     for (const key of Object.keys(optionsWithDefaults)) {
       /* eslint-disable no-useless-call */
-      transaction[key].call(transaction, optionsWithDefaults[key])
+      if (Array.isArray(optionsWithDefaults[key])) {
+        transaction[key].call(transaction, ...optionsWithDefaults[key])
+      } else {
+        transaction[key].call(transaction, optionsWithDefaults[key])
+      }
+    }
+
+    if (delegateTest) {
+      const origin = Array.isArray(optionsWithDefaults.delegate) && optionsWithDefaults.delegate.length > 1 ? optionsWithDefaults.delegate[1] : (account || '0x0000000000000000000000000000000000000000')
+      const testTransaction = new Transaction({
+        clauses,
+        chainTag: Number.parseInt(connex.thor.genesis.id.slice(-2), 16),
+        blockRef: connex.thor.status.head.id.slice(0, 18),
+        expiration: 32,
+        gas: connex.thor.genesis.gasLimit,
+        gasPriceCoef: 128,
+        dependsOn: optionsWithDefaults.dependsOn || null,
+        nonce: +new Date(),
+        reserved: {
+          features: 1
+        }
+      })
+
+      const { success, message, errors } = await postJSON(delegateTest, { raw: `0x${testTransaction.encode().toString('hex')}`, origin }, [200])
+      if (!success) {
+        console.error('fee delegation test failed', errors)
+        throw new FeeDelegationError(message || 'fee delegation rejected', errors)
+      }
     }
 
     const { txid } = await transaction.request()
     return txid
-  }, [defaultOptions])
+  }, [account, defaultOptions])
 
   return <VeChainContext.Provider value={{ connex, connect, disconnect, account, config, options, submitTransaction, waitForTransactionId }}>{children}</VeChainContext.Provider>
+}
+
+class FeeDelegationError extends Error {
+  constructor (message, errors) {
+    super(message)
+    this.name = 'FeeDelegationError'
+    this.errors = errors
+  }
 }
