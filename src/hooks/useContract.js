@@ -1,19 +1,16 @@
-import { useState, useEffect, useContext } from 'react'
+import { useContext } from 'react'
 import { VeChainContext } from '../providers/VeChain'
 
-export function useContract (contractAddress, abis) {
+export function useContracts (contractAddresses, abis) {
   const { connex, submitTransaction, waitForTransactionId } = useContext(VeChainContext)
-  const [contract, setContract] = useState()
-  const [fns, setFunctions] = useState({})
 
-  useEffect(() => {
-    if (!connex || !contractAddress) { return }
-    setContract(connex.thor.account(contractAddress))
-  }, [connex, contractAddress])
+  if (!connex) {
+    return []
+  }
 
-  useEffect(() => {
-    if (!contract || !abis?.length) { return }
+  const contracts = contractAddresses.map(contractAddress => connex.thor.account(contractAddress))
 
+  const contractsFns = contracts.map(contract => {
     const fns = { _parsed: true }
     abis
       .filter(({ type }) => type === 'function')
@@ -26,7 +23,8 @@ export function useContract (contractAddress, abis) {
           fns[name] = generateTransactionFunction(abi)
         }
       })
-    setFunctions(fns)
+
+    return fns
 
     function generateViewFunction (abi) {
       return async (...args) => (await contract.method(abi).call(...args)).decoded
@@ -50,7 +48,11 @@ export function useContract (contractAddress, abis) {
         }
       }
     }
-  }, [contract, abis])
+  })
 
-  return fns
+  return contractsFns
+}
+
+export function useContract (contractAddress, abis) {
+  return useContracts([contractAddress], abis)[0]
 }

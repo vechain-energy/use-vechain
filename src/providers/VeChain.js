@@ -4,12 +4,11 @@ import Connex from '@vechain/connex'
 
 export const VeChainContext = createContext()
 export const VeChainProvider = ({ children, config, options }) => {
-  const [connex, setConnex] = useState()
+  const connex = new Connex(config)
   const [account, setAccount] = useLocalStorage('account')
   const [defaultOptions, setDefaultOptions] = useState({})
 
   const connect = useCallback(async (payloadOrContent = 'identification') => {
-    console.log(payloadOrContent)
     const payload = typeof (payloadOrContent) === 'object' ? { ...payloadOrContent } : { type: 'text', content: payloadOrContent }
     const certificate = {
       purpose: 'agreement',
@@ -20,15 +19,11 @@ export const VeChainProvider = ({ children, config, options }) => {
     setAccount(result.annex.signer)
 
     return result
-  }, [connex])
+  }, [])
 
   const disconnect = useCallback(async () => {
     setAccount()
   }, [])
-
-  useEffect(() => {
-    setConnex(new Connex(config))
-  }, [config])
 
   useEffect(() => {
     setDefaultOptions(options)
@@ -54,7 +49,7 @@ export const VeChainProvider = ({ children, config, options }) => {
     }
 
     return transaction
-  }, [connex])
+  }, [])
 
   const submitTransaction = useCallback(async function submitTransaction (clauses, options = {}) {
     const transaction = connex.vendor.sign('tx', clauses)
@@ -66,7 +61,7 @@ export const VeChainProvider = ({ children, config, options }) => {
 
     const { txid } = await transaction.request()
     return txid
-  }, [connex, defaultOptions])
+  }, [defaultOptions])
 
   return <VeChainContext.Provider value={{ connex, connect, disconnect, account, config, options, submitTransaction, waitForTransactionId }}>{children}</VeChainContext.Provider>
 }

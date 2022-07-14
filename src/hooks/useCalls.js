@@ -6,17 +6,14 @@ export function useCalls (contractAddress, abis, argsList) {
   const contract = useContract(contractAddress, abis)
 
   useEffect(() => {
-    if (!contract?._parsed || !argsList?.length) { return }
     executeCalls({ contract, abis, argsList }).then(setResults)
-  }, [contract, abis, argsList])
+  }, [])
 
   return results
 }
 
 export function useCall (contractAddress, abi, args) {
-  const [abis] = useState([abi])
-  const [argsList] = useState([args])
-  return useCalls(contractAddress, abis, argsList)[0] || {}
+  return useCalls(contractAddress, [abi], [args])[0] || {}
 }
 
 async function executeCalls ({ contract, abis, argsList }) {

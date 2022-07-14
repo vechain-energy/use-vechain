@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { useContract } from '@vechain.energy/use-vechain'
+import { useContract, useContracts, useTokens } from '@vechain.energy/use-vechain'
 import { Meta, Story, Canvas } from '@storybook/addon-docs';
 import { Button } from 'antd'
 
@@ -7,7 +7,8 @@ import { Button } from 'antd'
 
 <Meta title="Hooks/useContract" />
 
-`useContract` generates an interactionable instance of a contract for a given list of ABIs
+* `useContract` generates an interactionable instance of a contract for a given list of ABIs.
+* `useContracts` generates multiple interactionable instance for a given listen of addresses using one ABI.
 
 ## Reading data
 
@@ -144,3 +145,29 @@ See `useMultiTask()` on how to achieve multiple clauses in a single transaction.
   </Story>
 </Canvas>
 
+
+
+
+## useContracts()
+
+export const MultiContracts = () => {
+  const { tokens } = useTokens()
+  const [abis] = useState([{"constant": true, "inputs": [{"name": "_owner", "type": "address"}], "name": "balanceOf", "outputs": [{"name": "balance", "type": "uint256"}], "payable": false, "stateMutability": "view", "type": "function"}])
+  const [balance1, setBalance1] = useState(-1)
+  const [balance2, setBalance2] = useState(-1)
+  const [balance3, setBalance3] = useState(-1)
+  const [contract1, contract2, contract3] = useContracts(tokens.slice(0,3).map(({address}) => address), abis)
+  useEffect(() => {
+    if(!contract1 || !contract2 || !contract3) { return } 
+    contract1.balanceOf('0x0000000000000000000000000000000000000000').then(({balance}) => setBalance1(balance))
+    contract2.balanceOf('0x0000000000000000000000000000000000000000').then(({balance}) => setBalance2(balance))
+    contract3.balanceOf('0x0000000000000000000000000000000000000000').then(({balance}) => setBalance3(balance))
+  }, [contract1, contract2, contract3])
+  return <pre>Balance #1: {balance1} | Balance #2: {balance2} | Balance #3: {balance3}</pre>
+}
+
+<Canvas withSource="open">
+  <Story name="MultiContracts">
+    {MultiContracts.bind()}
+  </Story>
+</Canvas>

@@ -9,13 +9,15 @@ export function useAccount () {
   const handleConnect = useCallback(async (...args) => {
     setError()
     setLoading(true)
+    let result
     try {
-      await connect(...args)
+      result = await connect(...args)
     } catch (err) {
       setError(err.message)
     } finally {
       setLoading(false)
     }
+    return result
   })
 
   return {
