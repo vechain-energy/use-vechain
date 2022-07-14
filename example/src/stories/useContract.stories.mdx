@@ -126,6 +126,7 @@ All parameters are optional:
 ```json
 {
   "delegate": "(url: string, signer: string): this: Enable VIP-191 by setting the url and the fee payer's address. Wallets(Sync2) will request fee payer's signature with the url and required parameters, read this (opens new window)to get the detail about building a VIP-191 service",
+  "delegateTest": "(url: string): test fee delegation on this url before passing user to a wallet",
   "signer": "(addr: string): this: Enforces the specified address to sign the transaction",
   "gas": "(gas: number): this: Enforces the specified number as the maximum gas that can be consumed for the transaction",
   "dependsOn": "(txid: string): this: Set another txid as dependency (Reference)",

@@ -26,7 +26,7 @@ Default options can be defined for all transactions. If a transaction defines th
 ```jsx
 <VeChainProvider
   config={{ node: 'https://testnet.veblocks.net', network: 'test' }}
-  options={{ delegate: 'https://sponsor-testnet.vechain.energy/by/90' }}
+  options={{ delegate: 'https://sponsor-testnet.vechain.energy/by/90', delegateTest: 'https://sponsor-testnet.vechain.energy/by/90/test' }}
 >
   <App />
 </VeChainProvider>
@@ -57,6 +57,23 @@ root.render(
 // to log results (for example: reportWebVitals(console.log))
 // or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
 reportWebVitals();
+```
+
+### Fee Delegation
+
+* Fee delegation can be enabled for all transactions with a default configuration of a `delegate` url
+* Defining an additional `delegateTest` posts the transations to that url first, allowing a UI error message that otherwise is shown in the wallet
+
+```jsx
+<VeChainProvider
+  config={{ node: 'https://testnet.veblocks.net', network: 'test' }}
+  options={{
+    delegate: 'https://sponsor-testnet.vechain.energy/by/90',
+    delegateTest: 'https://sponsor-testnet.vechain.energy/by/90/test'
+  }}
+>
+  <App />
+</VeChainProvider>
 ```
 
 

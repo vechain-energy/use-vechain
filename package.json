@@ -1,7 +1,14 @@
 {
   "name": "@vechain.energy/use-vechain",
-  "version": "0.6.0",
+  "version": "0.8.0",
   "description": "simplified interaction with VeChain",
+  "keywords": [
+    "vechain",
+    "connex",
+    "web3",
+    "react",
+    "hooks"
+  ],
   "author": "favo <npm@favo.org>",
   "license": "MIT",
   "repository": "https://gitlab.com/vechain.energy/common/use-vechain.git",
@@ -53,6 +60,7 @@
   "dependencies": {
     "@vechain/connex": "^2.0.11",
     "@vechain/ethers": "^4.0.27-5",
-    "bent": "^7.3.12"
+    "bent": "^7.3.12",
+    "thor-devkit": "^2.0.5"
   }
 }
