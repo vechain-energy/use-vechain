@@ -1,0 +1,179 @@
+import { useState, useEffect } from 'react'
+import { useSendTransaction } from '@vechain.energy/use-vechain'
+import { Meta, Story, Canvas } from '@storybook/addon-docs';
+import { Button } from 'antd'
+
+# useSendTransaction
+
+<Meta title="Hooks/useSendTransaction" />
+
+## Send VET
+
+Send a raw transaction to transfer the native VET token or custom data. Basically a [clause](https://docs.vechain.org/connex/api.html#vm-clause) is given.
+
+export const SendVet = () => {
+  const [tx, setTx] = useState() 
+  const [loading, setLoading] = useState(false)
+  const { sendTransaction } = useSendTransaction()
+  const handleSend = async () => {
+    setLoading(true)
+    try {
+      const tx = await sendTransaction({ to: '0x0000000000000000000000000000000000000000', value: 0 })
+      const receipt = await tx.getReceipt()
+      setTx({ tx, receipt })
+    }
+    catch (err) {
+      setTx({error: err.message})
+    }
+    finally {
+      setLoading(false)
+    }
+  }
+  return (
+    <div>
+      <Button onClick={handleSend} loading={loading}>send zero VET to address(0)</Button><br />
+      <pre>{JSON.stringify(tx, "", 2)}</pre>
+    </div>
+  )
+}
+
+<Canvas withSource="open">
+  <Story name="VET">
+    {SendVet.bind()}
+  </Story>
+</Canvas>
+
+
+## Send data
+
+Raw data can be send in the same call, allowing to deploy or call contracts.
+
+export const SendData = () => {
+  const [tx, setTx] = useState() 
+  const [loading, setLoading] = useState(false)
+  const { sendTransaction } = useSendTransaction()
+  const handleSend = async () => {
+    setLoading(true)
+    try {
+      const tx = await sendTransaction({
+        to: '0x0000000000000000000000000000000000000000',
+        data: '0x48656C6C6F2023566546616D'
+      })
+      const receipt = await tx.getReceipt()
+      setTx({ tx, receipt })
+    }
+    catch (err) {
+      setTx({error: err.message})
+    }
+    finally {
+      setLoading(false)
+    }
+  }
+  return (
+    <div>
+      <Button onClick={handleSend} loading={loading}>send data with transaction</Button><br />
+      <pre>{JSON.stringify(tx, "", 2)}</pre>
+    </div>
+  )
+}
+
+<Canvas withSource="open">
+  <Story name="Data">
+    {SendData.bind()}
+  </Story>
+</Canvas>
+
+
+## Deploy contracts
+
+Sending `data` with no recipient will deploy a contract.
+
+export const DeployContract = () => {
+  const [tx, setTx] = useState() 
+  const [loading, setLoading] = useState(false)
+  const { sendTransaction } = useSendTransaction()
+  const handleSend = async () => {
+    setLoading(true)
+    try {
+      const tx = await sendTransaction({
+        data: '0x608060405234801561001057600080fd5b50610100806100206000396000f3fe6080604052348015600f57600080fd5b506004361060325760003560e01c806361bc221a146037578063d09de08a146051575b600080fd5b603f60005481565b60405190815260200160405180910390f35b60576059565b005b600080549080606683606d565b9190505550565b60007fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff82141560c3577f4e487b710000000000000000000000000000000000000000000000000000000081526011600452602481fd5b506001019056fea2646970667358221220386be05a24f5e3bcc885a4ab3978392383efd3fad7d0d39aebb4075db986562e64736f6c63430008040033'
+      })
+      const receipt = await tx.getReceipt()
+      setTx({ tx, receipt })
+    }
+    catch (err) {
+      setTx({error: err.message})
+    }
+    finally {
+      setLoading(false)
+    }
+  }
+  return (
+    <div>
+      <Button onClick={handleSend} loading={loading}>deploy contract</Button><br />
+      <pre>{JSON.stringify(tx, "", 2)}</pre>
+    </div>
+  )
+}
+
+<Canvas withSource="open">
+  <Story name="Deploy Contract">
+    {DeployContract.bind()}
+  </Story>
+</Canvas>
+
+
+## Options
+
+
+export const SendOptions = () => {
+  const [tx, setTx] = useState() 
+  const [loading, setLoading] = useState(false)
+  const { sendTransaction } = useSendTransaction()
+  const handleSend = async () => {
+    setLoading(true)
+    try {
+      const tx = await sendTransaction({ to: '0x0000000000000000000000000000000000000000', value: 0 }, { comment: 'send zero VET to address(0)', delegate: 'https://sponsor-testnet.vechain.energy/by/90' })
+      const receipt = await tx.getReceipt()
+      setTx({ tx, receipt })
+    }
+    catch (err) {
+      setTx({error: err.message})
+    }
+    finally {
+      setLoading(false)
+    }
+  }
+  return (
+    <div>
+      <Button onClick={handleSend} loading={loading}>send zero VET to address(0)</Button><br />
+      <pre>{JSON.stringify(tx, "", 2)}</pre>
+    </div>
+  )
+}
+
+<Canvas withSource="open">
+  <Story name="Options">
+    {SendOptions.bind()}
+  </Story>
+</Canvas>
+
+All options of the [transaction service](https://docs.vechain.org/connex/api.html#transaction-signing-service) are available by passing an object as additional argument.
+
+All parameters are optional:
+
+```json
+{
+  "delegate": "(url: string, signer: string): this: Enable VIP-191 by setting the url and the fee payer's address. Wallets(Sync2) will request fee payer's signature with the url and required parameters, read this (opens new window)to get the detail about building a VIP-191 service",
+  "signer": "(addr: string): this: Enforces the specified address to sign the transaction",
+  "gas": "(gas: number): this: Enforces the specified number as the maximum gas that can be consumed for the transaction",
+  "dependsOn": "(txid: string): this: Set another txid as dependency (Reference)",
+  "link": "(url: string): this: Set the link to reveal transaction-related information, the link will be used for connex to assemble a callback url by replacing the placeholder {txid} by Transaction ID",
+  "comment": "(text: string): this: Set the comment for the transaction that will be revealed to the user",
+  "transaction": "(obj: transaction): transaction object returned from multiTask() to support multiple clauses in a single transaction"
+}
+```
+
+If `transaction` is given as option, only `comment` is valid as additional options. The other options are for a transction and can not be defined for each single clause.  
+See `useMultiTask()` on how to achieve multiple clauses in a single transaction.
+
