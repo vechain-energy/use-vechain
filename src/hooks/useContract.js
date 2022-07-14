@@ -38,9 +38,15 @@ export function useContract (contractAddress, abis) {
         const options = fnArgs.length > abi.inputs.length ? fnArgs[abi.inputs.length] : {}
 
         const clause = contract.method(abi).asClause(...args)
-        const txid = await submitTransaction([clause], options)
-
-        return waitForTransactionId(txid)
+        if (options.transaction) {
+          if (options.comment) {
+            clause.comment = options.comment
+          }
+          options.transaction._addClause(clause)
+        } else {
+          const txid = await submitTransaction([clause], options)
+          return waitForTransactionId(txid)
+        }
       }
     }
   }, [contract, abis])
