@@ -1,6 +1,6 @@
 {
   "name": "@vechain.energy/use-vechain",
-  "version": "0.8.0",
+  "version": "0.9.0",
   "description": "simplified interaction with VeChain",
   "keywords": [
     "vechain",
