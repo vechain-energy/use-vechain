@@ -1,5 +1,4 @@
 import { Transaction } from 'thor-devkit'
-import FeeDelegationError from './FeeDelegationError'
 import bent from 'bent'
 
 const postJSON = bent('POST', 'json')
@@ -23,5 +22,13 @@ export default async function testDelegation ({ url, connex, origin, clauses, op
   if (!success) {
     console.error('fee delegation test failed', errors)
     throw new FeeDelegationError(message || 'fee delegation rejected', errors)
+  }
+}
+
+class FeeDelegationError extends Error {
+  constructor (message, errors) {
+    super(message)
+    this.name = 'FeeDelegationError'
+    this.errors = errors
   }
 }

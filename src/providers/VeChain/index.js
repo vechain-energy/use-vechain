@@ -65,7 +65,7 @@ export const VeChainProvider = ({ children, config, options }) => {
 
   const submitTransaction = useCallback(async function submitTransaction (clauses, options = {}) {
     const connex = getGlobalConnexIfNetworkMatches()
-    const transaction = connex.vendor.sign('tx', clauses)
+    const transaction = isConnexV1(connex) ? connex.vendor.sign('tx') : connex.vendor.sign('tx', clauses)
     const { delegateTest, ...optionsWithDefaults } = { ...defaultOptions, ...options }
     for (const key of Object.keys(optionsWithDefaults)) {
       /* eslint-disable no-useless-call */
