@@ -4,7 +4,7 @@ import { VeChainContext } from '../providers/VeChain'
 export function useSendTransaction () {
   const { submitTransaction, waitForTransactionId } = useContext(VeChainContext)
 
-  const sendTransaction = async ({ to = null, value = 0, data, comment }, options = {}) => {
+  const sendTransaction = async ({ to = null, value = 0, data = '0x', comment }, options = {}) => {
     const clause = { to, value, data, comment }
 
     if (options.transaction) {
