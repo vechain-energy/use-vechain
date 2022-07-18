@@ -27,7 +27,13 @@ export function useContracts (contractAddresses, abis) {
     return fns
 
     function generateViewFunction (abi) {
-      return async (...args) => (await contract.method(abi).call(...args)).decoded
+      return async (...args) => {
+        const { decoded } = await contract.method(abi).call(...args)
+        if (abi.outputs.length === 1 && !abi.outputs[0].name) {
+          return decoded['0']
+        }
+        return decoded
+      }
     }
 
     function generateTransactionFunction (abi) {

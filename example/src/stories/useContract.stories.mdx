@@ -36,6 +36,31 @@ export const Reading = () => {
 </Canvas>
 
 
+In case a single output is defined and it has no name. The value of `decoded.0` will be returned instead of `decoded`. It makes the call more intuitive and removes the mountain of `.0` calls. Named returns are ignored because they might be planned to be extended in the future.
+
+export const Reading0 = () => {
+  const [address] = useState('0x0000000000000000000000000000456e65726779')
+  const [abis] = useState([{"constant": true, "inputs": [{"name": "_owner", "type": "address"}], "name": "balanceOf", "outputs": [{"name": "", "type": "uint256"}], "payable": false, "stateMutability": "view", "type": "function"}])
+  const [balance, setBalance] = useState(0)
+  // get balanceOf function
+  const { balanceOf } = useContract(address, abis)
+  // call balance of address(0) and set into state
+  useEffect(() => {
+    if(!balanceOf) { return }
+    balanceOf('0x0000000000000000000000000000000000000000').then(balance => setBalance(balance))
+  }, [balanceOf])
+  // debug output
+  return <pre>Balance: {balance}</pre>
+}
+
+<Canvas withSource="open">
+  <Story name="Reading Unnamed">
+    {Reading0.bind()}
+  </Story>
+</Canvas>
+
+
+
 ## Writing data
 
 Writing functions return a [transaction visitor](https://docs.vechain.org/connex/api.html#transaction-visitor) or throw an error with the revert reason.
