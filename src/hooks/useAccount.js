@@ -2,7 +2,7 @@ import { useState, useContext, useCallback } from 'react'
 import { VeChainContext } from '../providers/VeChain'
 
 export function useAccount () {
-  const { account, connect, disconnect } = useContext(VeChainContext)
+  const { account, connect, disconnect, transactionIds } = useContext(VeChainContext)
   const [error, setError] = useState()
   const [isLoading, setLoading] = useState(false)
 
@@ -25,6 +25,7 @@ export function useAccount () {
     isLoading,
     error,
     connect: handleConnect,
-    disconnect
+    disconnect,
+    transactionIds
   }
 }

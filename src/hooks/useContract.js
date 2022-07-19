@@ -1,34 +1,44 @@
-import { useContext } from 'react'
+import { useContext, useState, useEffect } from 'react'
 import { VeChainContext } from '../providers/VeChain'
+import { ethers } from '@vechain/ethers'
+const { BigNumber } = ethers.utils
 
 export function useContracts (contractAddresses, abis) {
   const { connex, submitTransaction, waitForTransactionId } = useContext(VeChainContext)
+  const [contracts, setContracts] = useState([...new Array(contractAddresses.length)].map(() => ({})))
 
-  if (!connex) {
-    return []
-  }
+  useEffect(() => {
+    if (!connex) {
+      return
+    }
 
-  const contracts = contractAddresses.map(contractAddress => connex.thor.account(contractAddress))
+    const contractVisitors = contractAddresses.map(contractAddress => connex.thor.account(contractAddress))
 
-  const contractsFns = contracts.map(contract => {
-    const fns = { _parsed: true }
-    abis
-      .filter(({ type }) => type === 'function')
-      .forEach(abi => {
-        const { name, stateMutability } = abi
+    const contracts = contractVisitors.map(contractVisitor => {
+      return generateContractObject(contractVisitor, abis)
+    })
 
-        if (stateMutability === 'view') {
-          fns[name] = generateViewFunction(abi)
-        } else {
-          fns[name] = generateTransactionFunction(abi)
-        }
-      })
+    setContracts(contracts)
 
-    return fns
+    function generateContractObject (contractVisitor, abis) {
+      const fns = { _parsed: true }
+      abis
+        .filter(({ type }) => type === 'function')
+        .forEach(abi => {
+          const { name, stateMutability } = abi
 
-    function generateViewFunction (abi) {
-      return async (...args) => {
-        const { decoded } = await contract.method(abi).call(...args)
+          if (stateMutability === 'view') {
+            fns[name] = generateViewFunction(contractVisitor, abi)
+          } else {
+            fns[name] = generateTransactionFunction(contractVisitor, abi)
+          }
+        })
+      return fns
+    }
+
+    function generateViewFunction (contractVisitor, abi) {
+      return async function (...args) {
+        const { decoded } = await contractVisitor.method(abi).call(...args)
         if (abi.outputs.length === 1 && !abi.outputs[0].name) {
           return decoded['0']
         }
@@ -36,12 +46,12 @@ export function useContracts (contractAddresses, abis) {
       }
     }
 
-    function generateTransactionFunction (abi) {
-      return async (...fnArgs) => {
+    function generateTransactionFunction (contractVisitor, abi) {
+      return async function (...fnArgs) {
         const args = fnArgs.slice(0, abi.inputs.length)
         const options = fnArgs.length > abi.inputs.length ? fnArgs[abi.inputs.length] : {}
 
-        const clause = contract.method(abi).asClause(...args)
+        const clause = contractVisitor.method(abi).asClause(...args)
         if (options.comment) { clause.comment = options.comment }
         if (options.value) { clause.value = options.value }
 
@@ -54,11 +64,12 @@ export function useContracts (contractAddresses, abis) {
         }
       }
     }
-  })
+  }, [JSON.stringify(contractAddresses, abis), waitForTransactionId, submitTransaction, connex])
 
-  return contractsFns
+  return contracts
 }
 
 export function useContract (contractAddress, abis) {
   return useContracts([contractAddress], abis)[0]
 }
+

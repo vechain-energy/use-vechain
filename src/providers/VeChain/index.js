@@ -10,17 +10,18 @@ const isConnexV1 = (connex) => (connex?.version?.split('.')[0] === '1')
 
 export const VeChainContext = createContext()
 export const VeChainProvider = ({ children, config, options }) => {
-  const connex = new Connex(config)
+  const [connex, setConnex] = useState()
+  const [transactionIds, setTransactiontIds] = useState([])
   const [account, setAccount] = useLocalStorage('account')
   const [defaultOptions, setDefaultOptions] = useState({})
 
-  function getGlobalConnexIfNetworkMatches () {
+  const getGlobalConnexIfNetworkMatches = useCallback(() => {
     if (window.connex && getNetworkByGenesisId(window.connex.thor.genesis.id) === config.network) {
       return window.connex
     }
 
     return connex
-  }
+  }, [connex])
 
   const connect = useCallback(async (payloadOrContent = 'identification') => {
     const connex = getGlobalConnexIfNetworkMatches()
@@ -30,11 +31,16 @@ export const VeChainProvider = ({ children, config, options }) => {
     const result = await (isConnexV1(connex) ? connex.vendor.sign('cert').request(certificate) : connex.vendor.sign('cert', certificate).request())
     setAccount(result.annex.signer)
     return result
-  }, [])
+  }, [getGlobalConnexIfNetworkMatches])
 
   const disconnect = useCallback(() => {
     setAccount()
   }, [])
+
+  useEffect(() => {
+    const connex = new Connex(config)
+    setConnex(connex)
+  }, [JSON.stringify(config)])
 
   useEffect(() => {
     setDefaultOptions(options)
@@ -60,8 +66,9 @@ export const VeChainProvider = ({ children, config, options }) => {
       throw new Error(revertReasons || 'Transaction was reverted')
     }
 
+    setTransactiontIds(transactionIds => [...transactionIds, id])
     return transaction
-  }, [])
+  }, [getGlobalConnexIfNetworkMatches])
 
   const submitTransaction = useCallback(async function submitTransaction (clauses, options = {}) {
     const connex = getGlobalConnexIfNetworkMatches()
@@ -85,9 +92,9 @@ export const VeChainProvider = ({ children, config, options }) => {
 
     const { txid } = await (isConnexV1(connex) ? transaction.request(clauses) : transaction.request())
     return txid
-  }, [account, defaultOptions])
+  }, [getGlobalConnexIfNetworkMatches, account, defaultOptions])
 
-  return <VeChainContext.Provider value={{ connex, connect, disconnect, account, config, options, submitTransaction, waitForTransactionId }}>{children}</VeChainContext.Provider>
+  return <VeChainContext.Provider value={{ connex, connect, disconnect, account, config, options: defaultOptions, submitTransaction, waitForTransactionId, transactionIds }}>{children}</VeChainContext.Provider>
 }
 
 function applyConnexV1DelegateCompatilibity ({ connex, delegate, transaction }) {
