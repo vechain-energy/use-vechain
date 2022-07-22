@@ -1,0 +1,62 @@
+import { useLinks } from '@vechain.energy/use-vechain'
+import { Meta, Story, Canvas } from '@storybook/addon-docs';
+
+# useLinks
+
+
+<Meta title="Hooks/useLinks" />
+
+Generate a link to the explorer to allow users to check on transaction details themself. The link is for the current network configuration.  
+Default links can be overwritten by defining them in the `options` of the `VeChainProvider`:
+
+The option values are:
+
+```json
+{
+  "linkTransaction": "https://explore-testnet.vechain.org/transactions/{txId}",
+  "linkAccount": "https://explore-testnet.vechain.org/accounts/{address}",
+  "linkBlock": "https://explore-testnet.vechain.org/blocks/{blockId}"
+}
+```
+
+Function | Example | Note
+:------- | :------ | :--------
+`getTransactionLink` | `getTransactionLink(txId)` | returns a link to the network explorer for a transaction id
+`getAccountLink` | `getAccountLink(address)` | returns a link to the network explorer for an account
+`getBlockLink` | `getBlockLink(blockId)` | returns a link to the network explorer for a block id
+
+export const GetTransactionLink = () => {
+  const { getTransactionLink } = useLinks()
+  return <a href={getTransactionLink('0x0026890dfbaf80ba08bc4f5d3e8f3a0a81b4f5a17398cc11fe304118d6634a43')} target='_blank' rel='noreferrer'>{getTransactionLink('0x0026890dfbaf80ba08bc4f5d3e8f3a0a81b4f5a17398cc11fe304118d6634a43')}</a>
+}
+
+
+<Canvas withSource="open">
+  <Story name="getTransactionLink">
+    {GetTransactionLink.bind()}
+  </Story>
+</Canvas>
+
+
+export const GetBlockLink = () => {
+  const { getBlockLink } = useLinks()
+  return <a href={getBlockLink('0x000000000b2bce3c70bc649a02749e8687721b09ed2e15997f466536b20bb127')} target='_blank' rel='noreferrer'>{getBlockLink('0x000000000b2bce3c70bc649a02749e8687721b09ed2e15997f466536b20bb127')}</a>
+}
+
+<Canvas withSource="open">
+  <Story name="getBlockLink">
+    {GetBlockLink.bind()}
+  </Story>
+</Canvas>
+
+
+export const GetAccountLink = () => {
+  const { getAccountLink } = useLinks()
+  return <a href={getAccountLink('0x0000000000000000000000000000000000000000')} target='_blank' rel='noreferrer'>{getAccountLink('0x0000000000000000000000000000000000000000')}</a>
+}
+
+<Canvas withSource="open">
+  <Story name="getAccountLink">
+    {GetAccountLink.bind()}
+  </Story>
+</Canvas>

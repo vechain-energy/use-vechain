@@ -10,4 +10,6 @@ import { useCall, useCalls } from './hooks/useCalls'
 import { useMultiTask } from './hooks/useMultiTask'
 import { useSendTransaction } from './hooks/useSendTransaction'
 
-export { VeChainProvider, useChainState, useAccount, useBalance, useTokens, useContract, useContracts, useCall, useCalls, useMultiTask, useSendTransaction }
+import { useLinks } from './hooks/useLinks'
+
+export { VeChainProvider, useChainState, useAccount, useBalance, useTokens, useContract, useContracts, useCall, useCalls, useMultiTask, useSendTransaction, useLinks }

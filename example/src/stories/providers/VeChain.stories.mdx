@@ -32,6 +32,17 @@ Default options can be defined for all transactions. If a transaction defines th
 </VeChainProvider>
 ```
 
+In addition the explorer links can be defined with a custom explorer using the following option keys:
+
+```json
+{
+  "linkTransaction": "https://explore-testnet.vechain.org/transactions/{txId}",
+  "linkAccount": "https://explore-testnet.vechain.org/accounts/{address}",
+  "linkBlock": "https://explore-testnet.vechain.org/blocks/{blockId}"
+}
+```
+
+
 ### Example Implementation
 
 Example for a `create-react-app` application and its `index.js`:
