@@ -1,8 +1,7 @@
 import React, { useState, useEffect, useCallback, createContext } from 'react'
 import { useLocalStorage } from '../../hooks/useLocalStorage'
-import Connex from '@vechain/connex'
+import { getConnex } from '@vechain.energy/connex-utils'
 import bent from 'bent'
-import getNetworkByGenesisId from './getNetworkByGenesisId'
 import testDelegation from './testDelegation'
 
 const postJSON = bent('POST', 'json')
@@ -16,7 +15,7 @@ export const VeChainProvider = ({ children, config, options }) => {
   const [defaultOptions, setDefaultOptions] = useState({})
 
   const getGlobalConnexIfNetworkMatches = useCallback(() => {
-    if (window.connex && getNetworkByGenesisId(window.connex.thor.genesis.id) === config.network) {
+    if (window.connex && window.connex.thor.genesis.id === connex.thor.genesis.id) {
       return window.connex
     }
 
@@ -38,8 +37,7 @@ export const VeChainProvider = ({ children, config, options }) => {
   }, [])
 
   useEffect(() => {
-    const connex = new Connex(config)
-    setConnex(connex)
+    getConnex(config).then(setConnex)
   }, [JSON.stringify(config)])
 
   useEffect(() => {

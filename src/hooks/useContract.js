@@ -1,7 +1,5 @@
 import { useContext, useState, useEffect } from 'react'
 import { VeChainContext } from '../providers/VeChain'
-import { ethers } from '@vechain/ethers'
-const { BigNumber } = ethers.utils
 
 export function useContracts (contractAddresses, abis) {
   const { connex, submitTransaction, waitForTransactionId } = useContext(VeChainContext)
@@ -72,4 +70,3 @@ export function useContracts (contractAddresses, abis) {
 export function useContract (contractAddress, abis) {
   return useContracts([contractAddress], abis)[0]
 }
-

@@ -1,6 +1,6 @@
 {
   "name": "@vechain.energy/use-vechain",
-  "version": "0.10.0",
+  "version": "0.11.0",
   "description": "simplified interaction with VeChain",
   "keywords": [
     "vechain",
@@ -58,6 +58,7 @@
     "dist"
   ],
   "dependencies": {
+    "@vechain.energy/connex-utils": "^1.1.0",
     "@vechain/connex": "^2.0.11",
     "@vechain/ethers": "^4.0.27-5",
     "bent": "^7.3.12",

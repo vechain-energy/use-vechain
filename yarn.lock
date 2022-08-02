@@ -1273,6 +1273,16 @@
   dependencies:
     "@types/node" "*"
 
+"@vechain.energy/connex-utils@^1.1.0":
+  version "1.1.0"
+  resolved "https://registry.npmjs.org/@vechain.energy/connex-utils/-/connex-utils-1.1.0.tgz#bc91a07689a30fa1677f83cea2e28404d1dd26f0"
+  integrity sha512-Yu9rp81BK7LxieTDqtTY0FB7Qs79UHKs36NP+DIDiZf+VMB1FBcQRpo4lQYW+X0CX2cCgFSvvuGL50ReCsXkxg==
+  dependencies:
+    "@vechain/connex" "^2.0.11"
+    "@vechain/connex-driver" "^2.0.10"
+    "@vechain/connex-framework" "^2.0.10"
+    bent "^7.3.12"
+
 "@vechain/connex-driver@^2.0.10":
   version "2.0.10"
   resolved "https://registry.npmjs.org/@vechain/connex-driver/-/connex-driver-2.0.10.tgz#0c29bd66e46b511a3d66f3a68a0921914bf990fd"
