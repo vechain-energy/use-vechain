@@ -87,7 +87,6 @@ export const VeChainProvider = ({ children, config, options }) => {
       const origin = Array.isArray(optionsWithDefaults.delegate) && optionsWithDefaults.delegate.length > 1 ? optionsWithDefaults.delegate[1] : (account || '0x0000000000000000000000000000000000000000')
       await testDelegation({ connex, url: delegateTest, options: optionsWithDefaults, origin, clauses })
     }
-
     const { txid } = await (isConnexV1(connex) ? transaction.request(clauses) : transaction.request())
     return txid
   }, [getGlobalConnexIfNetworkMatches, account, defaultOptions])

@@ -19,9 +19,9 @@ export const MultiTask = () => {
     setLoading(true)
     try {
       const tx = await multiTask(transaction => {
-        increment({ comment: 'increment by +1', transaction })
-        increment({ comment: 'increment by +1', transaction })
-        increment({ comment: 'increment by +1', transaction })
+        [...new Array(950)].forEach(() => {
+          increment({ comment: 'increment by +1', transaction })
+        })
       }, { comment: 'increment by +3', delegate: 'https://sponsor-testnet.vechain.energy/by/90' })
       const receipt = await tx.getReceipt()
       setTx({ tx, receipt })
@@ -84,8 +84,9 @@ const { multiTask } = useMultiTask()
 const { increment } = useContract(address, abis)
 // …
 await multiTask(async (transaction) => {
-  increment({ transaction }) // will be queued
-  increment({ transaction }) // will be queued as well
+  [...new Array(100)].forEach () {
+    increment({ transaction }) // will be queued
+  }
 }) // will auto commit at end of function
 ```
 

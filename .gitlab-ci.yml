@@ -10,6 +10,7 @@ build storybook:
   image: node:16
   script:
     - yarn install
+    - yarn link
     - cd example
     - yarn install
     - yarn run build-storybook

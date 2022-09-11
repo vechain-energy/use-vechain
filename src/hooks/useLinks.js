@@ -1,5 +1,6 @@
-import { useContext } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import { VeChainContext } from '../providers/VeChain'
+import getNetworkByGenesisId from '../providers/VeChain/getNetworkByGenesisId'
 
 const DEFAULT_LINKS = {
   test: {
@@ -15,11 +16,18 @@ const DEFAULT_LINKS = {
 }
 
 export function useLinks () {
-  const { config, options } = useContext(VeChainContext)
+  const { options, connex } = useContext(VeChainContext)
+  const [networkType, setNetworkType] = useState('main')
 
-  const linkTransaction = options.linkTransaction || DEFAULT_LINKS[config.network].linkTransaction
-  const linkBlock = options.linkTransaction || DEFAULT_LINKS[config.network].linkBlock
-  const linkAccount = options.linkTransaction || DEFAULT_LINKS[config.network].linkAccount
+  useEffect(() => {
+    if (!connex) { return }
+    const networkType = getNetworkByGenesisId(connex.thor.genesis.id)
+    setNetworkType(networkType)
+  }, [connex])
+
+  const linkTransaction = options.linkTransaction || DEFAULT_LINKS[networkType].linkTransaction
+  const linkBlock = options.linkTransaction || DEFAULT_LINKS[networkType].linkBlock
+  const linkAccount = options.linkTransaction || DEFAULT_LINKS[networkType].linkAccount
 
   const getTransactionLink = (txId) => linkTransaction.replace('{txId}', txId)
   const getBlockLink = (blockId) => linkBlock.replace('{blockId}', blockId)
