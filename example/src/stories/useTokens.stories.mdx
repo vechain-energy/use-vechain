@@ -1,4 +1,4 @@
-import { useTokens } from '@vechain.energy/use-vechain'
+import { useTokens, VeChainProvider } from '@vechain.energy/use-vechain'
 import { Meta, Story, Canvas } from '@storybook/addon-docs';
 
 # useTokens
@@ -8,15 +8,42 @@ import { Meta, Story, Canvas } from '@storybook/addon-docs';
 Provides access to the official token registry at https://github.com/vechain/token-registry  
 The list is loaded based on the `VeChainProvider` network configuration.
 
+Options are optionally acepted as object, the following keys are supported:
+
+All parameters are optional:
+
+```json
+{
+  "usdPrice": "(bool): fetch usd price information and extend the token listing with it"
+}
+```
+
 ### Example
 
 export const Tokens = () => {
   const { tokens } = useTokens()
-  return <pre>{JSON.stringify(tokens.slice(0,2), "", 2)}</pre>
+  return <pre>{JSON.stringify(tokens.slice(0, 2), "", 2)}</pre>
 }
 
 <Canvas withSource="open">
   <Story name="tokens">
     {Tokens.bind()}
+  </Story>
+</Canvas>
+
+### With Price Information
+
+export const TokensWithPrice = () => {
+  const { tokens } = useTokens({ usdPrice: true })
+  return (
+    <VeChainProvider config={{ node: 'https://mainnet.veblocks.net', network: 'main' }}>
+      <pre>{JSON.stringify([ ...tokens.slice(0, 2), ...tokens.slice(-2) ], "", 2)}</pre>
+    </VeChainProvider>
+  )
+}
+
+<Canvas withSource="open">
+  <Story name="price">
+    {TokensWithPrice.bind()}
   </Story>
 </Canvas>
