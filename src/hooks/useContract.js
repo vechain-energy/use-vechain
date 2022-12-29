@@ -51,7 +51,10 @@ export function useContracts (contractAddresses, abis) {
 
         const clause = contractVisitor.method(abi).asClause(...args)
         if (options.comment) { clause.comment = options.comment }
-        if (options.value) { clause.value = options.value }
+        if (options.value) {
+          clause.value = options.value
+          delete options.value
+        }
 
         if (options.transaction) {
           options.transaction._addClause(clause)
