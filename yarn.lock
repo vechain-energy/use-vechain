@@ -1273,12 +1273,12 @@
   dependencies:
     "@types/node" "*"
 
-"@vechain.energy/connex-utils@^1.1.0":
-  version "1.1.0"
-  resolved "https://registry.npmjs.org/@vechain.energy/connex-utils/-/connex-utils-1.1.0.tgz#bc91a07689a30fa1677f83cea2e28404d1dd26f0"
-  integrity sha512-Yu9rp81BK7LxieTDqtTY0FB7Qs79UHKs36NP+DIDiZf+VMB1FBcQRpo4lQYW+X0CX2cCgFSvvuGL50ReCsXkxg==
+"@vechain.energy/connex-utils@^1.1.1":
+  version "1.1.1"
+  resolved "https://registry.npmjs.org/@vechain.energy/connex-utils/-/connex-utils-1.1.1.tgz#dd2508eb2f9a6f261a938b940c4037123a6c6f87"
+  integrity sha512-Y9fRLr0necCxtJ0eaEuD1OJHrqVs/vFbTmJTM07pastyM9k2nZaLsOoevqi2LEikbfN4MWlJT0yuP+03SSzldA==
   dependencies:
-    "@vechain/connex" "^2.0.11"
+    "@vechain/connex" "^2.0.14"
     "@vechain/connex-driver" "^2.0.10"
     "@vechain/connex-framework" "^2.0.10"
     bent "^7.3.12"
@@ -1296,6 +1296,19 @@
     thor-devkit "^2.0.5"
     ws "^7.1.0"
 
+"@vechain/connex-driver@^2.0.12":
+  version "2.0.12"
+  resolved "https://registry.npmjs.org/@vechain/connex-driver/-/connex-driver-2.0.12.tgz#70a4adfaf9860db1b3f1fc9074a6553ea344ffda"
+  integrity sha512-KdlpCIuFPqnOSlJGc2tnqZDC62WypSjFFj0m/wH6bkOSPKugmy5wapQfhoMs0iR8EvO8xpXzg1jDcVapN7vgXQ==
+  dependencies:
+    "@vechain/connex-types" "^2.0.12"
+    axios "^0.21.1"
+    bignumber.js "^7.2.1"
+    isomorphic-ws "^4.0.1"
+    lru-cache "^5.1.1"
+    thor-devkit "^2.0.5"
+    ws "^7.1.0"
+
 "@vechain/connex-framework@^2.0.10":
   version "2.0.10"
   resolved "https://registry.npmjs.org/@vechain/connex-framework/-/connex-framework-2.0.10.tgz#cb281ae38473d862baea061483579ad66b3d76ee"
@@ -1306,18 +1319,33 @@
     thor-devkit "^2.0.5"
     validator-ts "^0.9.1"
 
+"@vechain/connex-framework@^2.0.12":
+  version "2.0.12"
+  resolved "https://registry.npmjs.org/@vechain/connex-framework/-/connex-framework-2.0.12.tgz#3f759b2806dd396f6e5d29a5eb75d72804bb8eff"
+  integrity sha512-IwPBPHv9utWqUQc5nc2uEkQqMls6Gc1qX/4tVM1VNsc0r/MQZBZGyxJLFSIpcGumEploesZO0s3x7+zRicn7og==
+  dependencies:
+    "@vechain/connex-types" "^2.0.12"
+    bignumber.js "^7.2.1"
+    thor-devkit "^2.0.5"
+    validator-ts "^0.9.1"
+
+"@vechain/connex-types@^2.0.12":
+  version "2.0.12"
+  resolved "https://registry.npmjs.org/@vechain/connex-types/-/connex-types-2.0.12.tgz#d89d50668f59f6c0239c94d9358c1443bc07f83e"
+  integrity sha512-FZLvB48U53FyL0cmDIh+eKqn6pNOjoUmp57qtMK8hDXi+hT+x6ZMEJbpmNhtcR7RrQoXqlx5/HFPOC6mVR+1Qg==
+
 "@vechain/connex-types@^2.0.2":
   version "2.0.2"
   resolved "https://registry.npmjs.org/@vechain/connex-types/-/connex-types-2.0.2.tgz#089d94137ba9934daf903025647897f804f4b7c4"
   integrity sha512-as905zXnVgc74mLkWkr2zMgJRJmFTMEDrRgtOPn68rqLeYCBzR7Ye1QCGbGKnPUaYGDLbGutoIW8r1y8wmGCUg==
 
-"@vechain/connex@^2.0.11":
-  version "2.0.11"
-  resolved "https://registry.npmjs.org/@vechain/connex/-/connex-2.0.11.tgz#82367608a8f571686e3a8eb3c479ae6a459ed3d4"
-  integrity sha512-28seKlT1xmw3FbksN/AFmSax/D4DMi/mISZHIQ1QzEycYPJIjLFK59phr+drIgLPgVQWP7bcnQO14BblZRfQOg==
+"@vechain/connex@^2.0.14":
+  version "2.0.14"
+  resolved "https://registry.npmjs.org/@vechain/connex/-/connex-2.0.14.tgz#b66a845becf66b9d673f68a022db1467f396da6b"
+  integrity sha512-h3JyW4rWTArK/Q7AA0TI7AjxDY/koW1s5NzY3yMoaOG26xqUbaSdagy3faId633LMZQPAx0BpVoCMmI7B1pwBw==
   dependencies:
-    "@vechain/connex-driver" "^2.0.10"
-    "@vechain/connex-framework" "^2.0.10"
+    "@vechain/connex-driver" "^2.0.12"
+    "@vechain/connex-framework" "^2.0.12"
     randombytes "^2.1.0"
     thor-devkit "^2.0.5"
 

@@ -17,7 +17,21 @@ Configuration to connex is passed using the `config` property:
 </VeChainProvider>
 ```
 
-All hooks rely on the VeChainProvider to interact with VeChain, it is required.
+## VeWorld & Sync2
+
+By default the wallets used are:
+
+1. VeWorld
+2. Sync2
+3. Sync2-lite
+
+VeWorld can actively be ignored providing `noExtension: true` flag in the `config`:
+
+```jsx
+<VeChainProvider config={{ node: 'https://testnet.veblocks.net', network: 'test', noExtension: true }}>
+  <App />
+</VeChainProvider>
+```
 
 ### Options
 

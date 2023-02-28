@@ -47,14 +47,14 @@ export const App = () => {
 ```
 
 
-_**A note regarding Sync2, Sync Browser and VeChainThor-Wallet**_
+_**A note regarding VeWorld, Sync2, Sync Browser and VeChainThor-Wallet**_
 
+* _VeWorld has priority over Sync2. `noExtension` can be used to disable it within the `VeChainProvider`._
 * _Sync Browser and VeChainThor-Wallet will open Sync2 if the network does not match<br />(for example: Sync Browser or App = MainNet, VeChainProvider set to TestNet)_
 * _If network matches_
     1. _`window.connex` will be used for user interaction (signing)_
     1. _`@vechain/connex` will be used for user network interaction_
 * _Fee delegation is supported in all environments_
-
 
 ---
 
